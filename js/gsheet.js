@@ -1,5 +1,7 @@
 // js/gsheet.js
 
+import { SPREADSHEET_ID, RANGE } from './const.js';
+
 async function loadSheetsData() {
     let response;
     try {
