@@ -29,6 +29,7 @@
         const RANGE = 'fb_all_prob'; // Adjust the range as per your Google Sheet
         const CLIENT_ID = '1001531064954-1207m61i9hkrausk96fe812jvqvjv4ef.apps.googleusercontent.com';
         const SPREADSHEET_ID = '1MgmXRQw-hdMkJDDuE5XBswAz9TlO0NEPmcdVgyGDY0c'
+        const REDIRECT_URI = 'https://pradhapganesanjava.github.io/pg-ads/pg_ads.html';  
 
         const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
@@ -53,6 +54,7 @@
             tokenClient = google.accounts.oauth2.initTokenClient({
                 client_id: CLIENT_ID,
                 scope: SCOPES,
+                redirect_uri: REDIRECT_URI,  // Added redirect URI here
                 callback: '', // defined later
             });
             gisInited = true;
@@ -65,23 +67,6 @@
             }
         }
 
-        function handleAuthClick() {
-            tokenClient.callback = async (resp) => {
-                if (resp.error !== undefined) {
-                    throw (resp);
-                }
-                document.getElementById('signout_button').style.display = 'block';
-                document.getElementById('authorize_button').innerText = 'Refresh';
-                await loadSheetsData();
-            };
-
-            if (gapi.client.getToken() === null) {
-                tokenClient.requestAccessToken({prompt: 'consent'});
-            } else {
-                tokenClient.requestAccessToken({prompt: ''});
-            }
-        }
-
         function handleSignoutClick() {
             const token = gapi.client.getToken();
             if (token !== null) {
@@ -90,6 +75,36 @@
                 document.getElementById('tableContainer').innerHTML = '';
                 document.getElementById('authorize_button').innerText = 'Authorize';
                 document.getElementById('signout_button').style.display = 'none';
+            }
+        }
+        function handleAuthClick() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                const token = gapi.client.getToken().access_token;
+
+                // Verify the user's email
+                const userInfo = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`)
+                    .then(response => response.json());
+
+                console.log('userInfo.email: '+userInfo.email);
+
+                if (userInfo.email === 'pradhap.ganesan.java@gmail.com') {
+                    // Proceed to load the Google Sheet data
+                    document.getElementById('signout_button').style.display = 'block';
+                    document.getElementById('authorize_button').innerText = 'Refresh';
+                    await loadSheetsData();
+                } else {
+                    alert('Unauthorized user. You do not have permission to access this resource.');
+                    handleSignoutClick();
+                }
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                tokenClient.requestAccessToken({ prompt: '' });
             }
         }
 
