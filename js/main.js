@@ -1,11 +1,11 @@
 // js/main.js
 import { initializeApp } from './app.js';
-import { fetchSheetData } from './sheetOperations.js';
+import { listMajors } from './sheetOperations.js';
 import { renderTable, initializeDataTable } from './leetTable.js';
 
 async function loadAndRenderData() {
     try {
-        const data = await fetchSheetData();
+        const data = await listMajors();
         renderTable(data);
     } catch (error) {
         console.error('Error loading and rendering data:', error);
