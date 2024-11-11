@@ -9,6 +9,11 @@ function renderTable(data) {
     }
 
     const tableContainer = document.getElementById('sheetDataTable');
+    
+    // Clear existing headers and rows
+    tableContainer.querySelector('thead').innerHTML = '';
+    tableContainer.querySelector('tbody').innerHTML = '';
+
     let headers = '<tr>';
     
     // Render headers
@@ -20,9 +25,14 @@ function renderTable(data) {
     // Append headers to table
     tableContainer.querySelector('thead').innerHTML = headers;
 
-    // Initialize DataTable with dynamic data after ensuring that the table is updated
+    // Prepare data for DataTable (Data without the headers)
+    const tableData = data.slice(1).map(row => {
+        return row.map(cell => cell || "");  // Replace null or undefined values with an empty string
+    });
+
+    // Initialize DataTable with dynamic data
     $('#sheetDataTable').DataTable({
-        data: data.slice(1), // Data without the headers
+        data: tableData,
         columns: data[0].map(header => ({ title: header })),
         pageLength: 25,
         lengthMenu: [25, 50, 100],

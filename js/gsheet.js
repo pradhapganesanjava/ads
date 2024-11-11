@@ -16,5 +16,6 @@ async function loadSheetsData() {
         document.getElementById('tableContainer').innerText = 'No values found.';
         return;
     }
+    console.log('Google Sheets API Response:', range);
     renderTable(range.values);
 }
