@@ -1,6 +1,6 @@
 // js/gapiLoader.js
 
-import { CLIENT_ID, SCOPES, REDIRECT_URI } from './const.js';
+// import { CLIENT_ID, SCOPES, REDIRECT_URI } from './const.js';
 
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
