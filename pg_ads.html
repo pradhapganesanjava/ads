@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data Viewer</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Google Sheets Data Viewer</h1>
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+    <div id="tableContainer"></div>
+
+    <script>
+        const RANGE = 'fb_all_prob'; // Adjust the range as per your Google Sheet
+        const CLIENT_ID = '1001531064954-1207m61i9hkrausk96fe812jvqvjv4ef.apps.googleusercontent.com';
+        const SPREADSHEET_ID = '1MgmXRQw-hdMkJDDuE5XBswAz9TlO0NEPmcdVgyGDY0c'
+
+        const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                discoveryDocs: [DISCOVERY_DOC],
+            });
+            gapiInited = true;
+            maybeEnableButtons();
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '', // defined later
+            });
+            gisInited = true;
+            maybeEnableButtons();
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                document.getElementById('authorize_button').style.display = 'block';
+            }
+        }
+
+        function handleAuthClick() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                document.getElementById('signout_button').style.display = 'block';
+                document.getElementById('authorize_button').innerText = 'Refresh';
+                await loadSheetsData();
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+                document.getElementById('tableContainer').innerHTML = '';
+                document.getElementById('authorize_button').innerText = 'Authorize';
+                document.getElementById('signout_button').style.display = 'none';
+            }
+        }
+
+        async function loadSheetsData() {
+            let response;
+            try {
+                response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: RANGE,
+                });
+            } catch (err) {
+                document.getElementById('tableContainer').innerText = err.message;
+                return;
+            }
+            const range = response.result;
+            if (!range || !range.values || range.values.length == 0) {
+                document.getElementById('tableContainer').innerText = 'No values found.';
+                return;
+            }
+            renderTable(range.values);
+        }
+
+        function renderTable(data) {
+            const tableContainer = document.getElementById('tableContainer');
+            let html = '<table><thead><tr>';
+            
+            // Render headers
+            data[0].forEach(header => {
+                html += `<th>${header}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            // Render data rows
+            for (let i = 1; i < data.length; i++) {
+                html += '<tr>';
+                data[i].forEach(cell => {
+                    html += `<td>${cell}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        document.getElementById('authorize_button').onclick = handleAuthClick;
+        document.getElementById('signout_button').onclick = handleSignoutClick;
+    </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+</html>
