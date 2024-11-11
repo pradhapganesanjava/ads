@@ -40,9 +40,28 @@
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
     <!-- Custom JS as Modules -->
+    <script type="module" src="js/const.js"></script>
     <script type="module" src="js/gscript.js"></script>
     <script type="module" src="js/gsheet.js"></script>
     <script type="module" src="js/render.js"></script>
+
+    <!-- Initialize Data Loading -->
+    <script>
+        // Wait for both GAPI and GIS to load and initialize data loading
+        document.addEventListener("DOMContentLoaded", () => {
+            if (gapiInited && gisInited) {
+                initializeDataLoading();
+            } else {
+                // Wait for both APIs to load
+                const interval = setInterval(() => {
+                    if (gapiInited && gisInited) {
+                        clearInterval(interval);
+                        initializeDataLoading();
+                    }
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>

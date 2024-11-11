@@ -6,19 +6,13 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
-function gapiLoaded() {
+// Attach to the window object to make it globally accessible
+window.gapiLoaded = function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
 
-async function initializeGapiClient() {
-    await gapi.client.init({
-        discoveryDocs: [DISCOVERY_DOC],
-    });
-    gapiInited = true;
-    maybeEnableButtons();
-}
-
-function gisLoaded() {
+// Attach to the window object to make it globally accessible
+window.gisLoaded = function gisLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
@@ -29,20 +23,17 @@ function gisLoaded() {
     maybeEnableButtons();
 }
 
+async function initializeGapiClient() {
+    await gapi.client.init({
+        discoveryDocs: [DISCOVERY_DOC],
+    });
+    gapiInited = true;
+    maybeEnableButtons();
+}
+
 function maybeEnableButtons() {
     if (gapiInited && gisInited) {
         document.getElementById('authorize_button').style.display = 'block';
-    }
-}
-
-function handleSignoutClick() {
-    const token = gapi.client.getToken();
-    if (token !== null) {
-        google.accounts.oauth2.revoke(token.access_token);
-        gapi.client.setToken('');
-        document.getElementById('sheetDataTable').style.display = 'none';
-        document.getElementById('authorize_button').innerText = 'Authorize';
-        document.getElementById('signout_button').style.display = 'none';
     }
 }
 
@@ -68,4 +59,15 @@ async function authorizeUser() {
     });
 }
 
-export { authorizeUser };
+function handleSignoutClick() {
+    const token = gapi.client.getToken();
+    if (token !== null) {
+        google.accounts.oauth2.revoke(token.access_token);
+        gapi.client.setToken('');
+        document.getElementById('sheetDataTable').style.display = 'none';
+        document.getElementById('authorize_button').innerText = 'Authorize';
+        document.getElementById('signout_button').style.display = 'none';
+    }
+}
+
+export { authorizeUser, handleSignoutClick };
