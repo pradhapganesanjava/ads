@@ -1,34 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Sheets Data Viewer</title>
-    <link rel="stylesheet" href="css/ads.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/ads.css">
 </head>
+
 <body>
-    <h1>Google Sheets Data Viewer</h1>
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-    <div id="tableContainer">
-        <table id="sheetDataTable" class="display" style="width: 100%">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Google Sheets Data Viewer</h1>
+        <div class="text-center mb-4">
+            <button id="authorize_button" class="btn btn-primary" style="display: none;">Authorize</button>
+            <button id="signout_button" class="btn btn-danger" style="display: none;">Sign Out</button>
+        </div>
+        <div id="tableContainer" class="table-responsive">
+            <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- Custom JS Files -->
     <script src="js/const.js"></script>
     <script src="js/gscript.js"></script>
     <script src="js/gsheet.js"></script>
     <script src="js/render.js"></script>
+    <!-- Google APIs -->
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
     <script>
-        document.getElementById('authorize_button').onclick = handleAuthClick;
-        document.getElementById('signout_button').onclick = handleSignoutClick;
+        // Initialize data loading on page load
+        async function initializeDataLoading() {
+            try {
+                // Authorize the user
+                await authorizeUser();
+                // Load Google Sheets data
+                const sheetsData = await loadSheetsData();
+                // Render the table with retrieved data
+                renderTable(sheetsData);
+            } catch (error) {
+                console.error('Error initializing data loading:', error);
+                document.getElementById('tableContainer').innerText = error;
+            }
+        }
+
+        // Start data loading once the page is loaded
+        $(document).ready(function () {
+            initializeDataLoading();
+
+            // Attach event listeners for buttons
+            $('#authorize_button').on('click', async function () {
+                try {
+                    await authorizeUser();
+                    const sheetsData = await loadSheetsData();
+                    renderTable(sheetsData);
+                } catch (error) {
+                    console.error('Error during authorization:', error);
+                    $('#tableContainer').text(error);
+                }
+            });
+
+            $('#signout_button').on('click', handleSignoutClick);
+        });
     </script>
 </body>
+
 </html>

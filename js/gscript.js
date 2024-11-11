@@ -1,3 +1,5 @@
+// js/jscript.js
+
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
@@ -20,7 +22,7 @@ function gisLoaded() {
         scope: SCOPES,
         redirect_uri: REDIRECT_URI,
         callback: '',
-    });
+    }); 
     gisInited = true;
     maybeEnableButtons();
 }
