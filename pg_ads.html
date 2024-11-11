@@ -80,33 +80,21 @@
         function handleAuthClick() {
             tokenClient.callback = async (resp) => {
                 if (resp.error !== undefined) {
-            console.error('OAuth Error:', resp.error);
-            throw resp;
+                    console.error('OAuth Error:', resp.error);
+                    document.getElementById('tableContainer').innerText = 'Authorization error: ' + resp.error;
+                    return;
                 }
-                const token = gapi.client.getToken().access_token;
-
-                // Verify the user's email
+                
+                document.getElementById('signout_button').style.display = 'block';
+                document.getElementById('authorize_button').innerText = 'Refresh';
+                
                 try {
-                    const userInfo = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`)
-                        .then(response => response.json());
-
-                    console.log('User Info:', userInfo);
-
-                        if (userInfo.email === 'pradhap.ganesan.java@gmail.com') {
-                            // Proceed to load the Google Sheet data
-                            document.getElementById('signout_button').style.display = 'block';
-                            document.getElementById('authorize_button').innerText = 'Refresh';
-                            await loadSheetsData();
-                        } else {
-                            alert('Unauthorized user. You do not have permission to access this resource.');
-                        handleSignoutClick();
-                    }
+                    await loadSheetsData();
                 } catch (error) {
-                    console.error('Error fetching user information:', error);
-                    alert('Failed to verify user identity. Please try again.');
-                            handleSignoutClick();
-                        }
-                    };
+                    console.error('Error loading sheet data:', error);
+                    document.getElementById('tableContainer').innerText = 'Error loading data: ' + error.message;
+                }
+            };
 
             if (gapi.client.getToken() === null) {
                 tokenClient.requestAccessToken({ prompt: 'consent' });
@@ -114,6 +102,43 @@
                 tokenClient.requestAccessToken({ prompt: '' });
             }
         }
+        // function handleAuthClick() {
+        //     tokenClient.callback = async (resp) => {
+        //         if (resp.error !== undefined) {
+        //     console.error('OAuth Error:', resp.error);
+        //     throw resp;
+        //         }
+        //         const token = gapi.client.getToken().access_token;
+
+        //         // Verify the user's email
+        //         try {
+        //             const userInfo = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`)
+        //                 .then(response => response.json());
+
+        //             console.log('User Info:', userInfo);
+
+        //                 if (userInfo.email === 'pradhap.ganesan.java@gmail.com') {
+        //                     // Proceed to load the Google Sheet data
+        //                     document.getElementById('signout_button').style.display = 'block';
+        //                     document.getElementById('authorize_button').innerText = 'Refresh';
+        //                     await loadSheetsData();
+        //                 } else {
+        //                     alert('Unauthorized user. You do not have permission to access this resource.');
+        //                 handleSignoutClick();
+        //             }
+        //         } catch (error) {
+        //             console.error('Error fetching user information:', error);
+        //             alert('Failed to verify user identity. Please try again.');
+        //                     handleSignoutClick();
+        //                 }
+        //             };
+
+        //     if (gapi.client.getToken() === null) {
+        //         tokenClient.requestAccessToken({ prompt: 'consent' });
+        //     } else {
+        //         tokenClient.requestAccessToken({ prompt: '' });
+        //     }
+        // }
 
         async function loadSheetsData() {
             let response;
