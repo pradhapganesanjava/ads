@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Sheets Data Viewer</title>
-    <!-- External CSS -->
     <link rel="stylesheet" href="css/ads.css">
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <!-- Include the constants file -->
-    <script src="js/const.js"></script>
 </head>
 <body>
     <h1>Google Sheets Data Viewer</h1>
@@ -22,135 +18,17 @@
         </table>
     </div>
 
-    <script type="module">
-        import { RANGE, CLIENT_ID, SPREADSHEET_ID, REDIRECT_URI, DISCOVERY_DOC, SCOPES } from './js/const.js';
-
-                let tokenClient;
-        let gapiInited = false;
-        let gisInited = false;
-
-        function gapiLoaded() {
-            gapi.load('client', initializeGapiClient);
-        }
-
-        async function initializeGapiClient() {
-            await gapi.client.init({
-                discoveryDocs: [DISCOVERY_DOC],
-            });
-            gapiInited = true;
-            maybeEnableButtons();
-        }
-
-        function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                redirect_uri: REDIRECT_URI,
-                callback: '',
-            });
-            gisInited = true;
-            maybeEnableButtons();
-        }
-
-        function maybeEnableButtons() {
-            if (gapiInited && gisInited) {
-                document.getElementById('authorize_button').style.display = 'block';
-            }
-        }
-
-        function handleSignoutClick() {
-            const token = gapi.client.getToken();
-            if (token !== null) {
-                google.accounts.oauth2.revoke(token.access_token);
-                gapi.client.setToken('');
-                document.getElementById('sheetDataTable').style.display = 'none';
-                document.getElementById('authorize_button').innerText = 'Authorize';
-                document.getElementById('signout_button').style.display = 'none';
-            }
-        }
-
-        function handleAuthClick() {
-            tokenClient.callback = async (resp) => {
-                if (resp.error !== undefined) {
-                    console.error('OAuth Error:', resp.error);
-                    document.getElementById('tableContainer').innerText = 'Authorization error: ' + resp.error;
-                    return;
-                }
-                
-                document.getElementById('signout_button').style.display = 'block';
-                document.getElementById('authorize_button').innerText = 'Refresh';
-                
-                try {
-                    await loadSheetsData();
-                } catch (error) {
-                    console.error('Error loading sheet data:', error);
-                    document.getElementById('tableContainer').innerText = 'Error loading data: ' + error.message;
-                }
-            };
-
-            if (gapi.client.getToken() === null) {
-                tokenClient.requestAccessToken({ prompt: 'consent' });
-            } else {
-                tokenClient.requestAccessToken({ prompt: '' });
-            }
-        }
-
-        async function loadSheetsData() {
-            let response;
-            try {
-                response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: RANGE,
-                });
-            } catch (err) {
-                document.getElementById('tableContainer').innerText = err.message;
-                return;
-            }
-            const range = response.result;
-            if (!range || !range.values || range.values.length == 0) {
-                document.getElementById('tableContainer').innerText = 'No values found.';
-                return;
-            }
-            renderTable(range.values);
-        }
-
-        function renderTable(data) {
-            // Clear existing data
-            const tableElement = $('#sheetDataTable').DataTable();
-            tableElement.clear();
-            tableElement.destroy();
-
-            const tableContainer = document.getElementById('sheetDataTable');
-            let headers = '<tr>';
-            
-            // Render headers
-            data[0].forEach(header => {
-                headers += `<th>${header}</th>`;
-            });
-            headers += '</tr>';
-
-            // Append headers to table
-            tableContainer.querySelector('thead').innerHTML = headers;
-
-            // Initialize DataTable with dynamic data
-            $(document).ready(function () {
-                $('#sheetDataTable').DataTable({
-                    data: data.slice(1), // Data without the headers
-                    columns: data[0].map(header => ({ title: header })),
-                    pageLength: 25,
-                    lengthMenu: [25, 50, 100],
-                    destroy: true
-                });
-            });
-        }
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="js/const.js"></script>
+    <script src="js/gscript.js"></script>
+    <script src="js/gsheet.js"></script>
+    <script src="js/render.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <script>
         document.getElementById('authorize_button').onclick = handleAuthClick;
         document.getElementById('signout_button').onclick = handleSignoutClick;
     </script>
-    <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 </html>
