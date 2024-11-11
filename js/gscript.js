@@ -2,26 +2,9 @@
 
 import { CLIENT_ID, DISCOVERY_DOC, SCOPES, REDIRECT_URI } from './const.js';
 
-let tokenClient;
-let gapiInited = false;
-let gisInited = false;
-
-// Attach to the window object to make it globally accessible
-window.gapiLoaded = function gapiLoaded() {
-    gapi.load('client', initializeGapiClient);
-}
-
-// Attach to the window object to make it globally accessible
-window.gisLoaded = function gisLoaded() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        redirect_uri: REDIRECT_URI,
-        callback: '',
-    });
-    gisInited = true;
-    maybeEnableButtons();
-}
+export let tokenClient;
+export let gapiInited = false;
+export let gisInited = false;
 
 async function initializeGapiClient() {
     await gapi.client.init({
@@ -59,15 +42,4 @@ async function authorizeUser() {
     });
 }
 
-function handleSignoutClick() {
-    const token = gapi.client.getToken();
-    if (token !== null) {
-        google.accounts.oauth2.revoke(token.access_token);
-        gapi.client.setToken('');
-        document.getElementById('sheetDataTable').style.display = 'none';
-        document.getElementById('authorize_button').innerText = 'Authorize';
-        document.getElementById('signout_button').style.display = 'none';
-    }
-}
-
-export { authorizeUser, handleSignoutClick };
+export { initializeGapiClient, authorizeUser };
