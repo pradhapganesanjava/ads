@@ -10,12 +10,16 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Google Sheets Data Viewer</h1>
-        <div class="text-center mb-4">
-            <button id="authorize_button" class="btn btn-primary" style="display: none;">Authorize</button>
-            <button id="signout_button" class="btn btn-danger" style="display: none;">Sign Out</button>
+        <div class="row align-items-center mb-4">
+            <div class="col">
+                <h1 class="mb-0">Google Sheets Data Viewer</h1>
+            </div>
+            <div class="col-auto">
+                <button id="authorize_button" class="btn btn-primary mr-2" style="display: none;">Authorize</button>
+                <button id="signout_button" class="btn btn-danger" style="display: none;">Sign Out</button>
+            </div>
         </div>
-        <div id="content"></div> <!-- Add this line if it's not already present -->
+        <div id="content"></div>
         <div id="tableContainer" class="table-responsive">
             <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
                 <thead></thead>

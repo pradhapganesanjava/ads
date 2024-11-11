@@ -1,36 +1,21 @@
 // js/sheetOperations.js
-
 import { SPREADSHEET_ID, RANGE } from './const.js';
 
-export async function listMajors() {
-    let response;
+export async function fetchSheetData() {
     try {
-        response = await gapi.client.sheets.spreadsheets.values.get({
+        const response = await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: SPREADSHEET_ID,
             range: RANGE,
         });
+        
+        const range = response.result;
+        if (!range || !range.values || range.values.length == 0) {
+            throw new Error('No values found.');
+        }
+        
+        return range.values;
     } catch (err) {
-        document.getElementById('content').innerText = err.message;
-        updateContent('Error: ' + err.message);
-        return;
-    }
-    const range = response.result;
-    if (!range || !range.values || range.values.length == 0) {
-        updateContent('No values found.');
-        return;
-    }
-    // Flatten to string to display
-    const output = range.values.reduce(
-        (str, row) => `${str}${row[0]}, ${row[4]}\n`,
-        'Name, Major:\n');
-    updateContent(output);
-}
-
-function updateContent(text) {
-    const contentElement = document.getElementById('content');
-    if (contentElement) {
-        contentElement.innerText = text;
-    } else {
-        console.warn('Element with id "content" not found. Content:', text);
+        console.error('Error fetching sheet data:', err);
+        throw err;
     }
 }
