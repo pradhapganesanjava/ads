@@ -11,16 +11,26 @@ export async function listMajors() {
         });
     } catch (err) {
         document.getElementById('content').innerText = err.message;
+        updateContent('Error: ' + err.message);
         return;
     }
     const range = response.result;
     if (!range || !range.values || range.values.length == 0) {
-        document.getElementById('content').innerText = 'No values found.';
+        updateContent('No values found.');
         return;
     }
     // Flatten to string to display
     const output = range.values.reduce(
         (str, row) => `${str}${row[0]}, ${row[4]}\n`,
         'Name, Major:\n');
-    document.getElementById('content').innerText = output;
+    updateContent(output);
+}
+
+function updateContent(text) {
+    const contentElement = document.getElementById('content');
+    if (contentElement) {
+        contentElement.innerText = text;
+    } else {
+        console.warn('Element with id "content" not found. Content:', text);
+    }
 }
