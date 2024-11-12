@@ -1,4 +1,5 @@
 // js/app.js
+
 import { loadGoogleApis, initializeGapiClient, initializeGisClient } from './googleApi.js';
 
 let tokenClient;

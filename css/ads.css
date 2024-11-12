@@ -22,3 +22,18 @@ th {
         margin-top: 1rem;
     }
 }
+
+.filter-section {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.collapsible-section {
+    transition: max-height 0.3s ease-out;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.collapsible-section.show {
+    max-height: 1000px;
+}
