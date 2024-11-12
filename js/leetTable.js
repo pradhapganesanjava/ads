@@ -24,7 +24,11 @@ export function renderTable(data, activeFilters = []) {
         if (activeFilters.length === 0) return true;
         return activeFilters.every(filter => {
             const columnIndex = headers.indexOf(filter.key);
-            return columnIndex !== -1 && row[columnIndex] === '1';
+            if (columnIndex !== -1) {
+                return row[columnIndex] === '1';
+            }
+            // If the filter key is not a column name, check if it's a value in any of the columns
+            return headers.some((header, index) => row[index] === '1' && header === filter.key);
         });
     });
 
