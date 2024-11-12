@@ -7,6 +7,7 @@ import { handleError } from './error.js';
 import { handleAuth, handleSignout } from './auth.js';
 import { fetchSheetData } from './sheetOperations.js';
 import { renderTable } from './leetTable.js';
+import { renderFilters } from './filterUi.js';
 
 async function init() {
     try {
@@ -55,11 +56,6 @@ async function loadAndRenderData() {
     } finally {
         updateState({ isLoading: false });
     }
-}
-
-function renderFilters(filterData) {
-    // Implement this function to render your filters
-    console.log('Filter data:', filterData);
 }
 
 document.addEventListener('DOMContentLoaded', init);
