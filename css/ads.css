@@ -31,19 +31,22 @@ th {
 
 #filterColumn {
     transition: all 0.3s ease-out;
+    width: 25%;
 }
 
 #filterColumn.collapsed {
-    flex: 0 0 40px;
-    max-width: 40px;
+    width: 40px;
 }
 
 #tableColumn {
     transition: all 0.3s ease-out;
+    width: calc(75% - 100px);
+    /* 75% minus the width of the right column */
 }
 
-#tableContainer {
-    margin-top: 20px;
+#rightColumn {
+    width: 100px;
+    /* Fixed width for the right column */
 }
 
 .expand-filters {
@@ -60,4 +63,9 @@ th {
 
 #filterColumn.collapsed .card {
     display: none;
+}
+
+#tableContainer {
+    width: 100%;
+    overflow-x: auto;
 }

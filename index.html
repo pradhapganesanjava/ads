@@ -25,9 +25,9 @@
             </div>
         </header>
 
-        <div class="row">
+        <div class="d-flex">
             <!-- Left Column - Filter Section -->
-            <div id="filterColumn" class="col-md-3">
+            <div id="filterColumn">
                 <button class="btn btn-link expand-filters" id="expandFilters">
                     <i class="fas fa-chevron-right"></i> Expand Filters
                 </button>
@@ -49,8 +49,8 @@
             </div>
         </div>
 
-            <!-- Right Column - Table Container -->
-            <div id="tableColumn" class="col">
+            <!-- Center Column - Table Container -->
+            <div id="tableColumn">
         <div id="content"></div>
         <div id="tableContainer" class="table-responsive">
             <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
@@ -60,8 +60,8 @@
                 </div>
             </div>
 
-            <!-- Additional Right Vertical Space -->
-            <div class="col-md-1"></div>
+            <!-- Right Column - Fixed Width -->
+            <div id="rightColumn"></div>
         </div>
     </div>
 
@@ -90,12 +90,12 @@
         $(document).ready(function() {
             $('#collapseFilters').click(function() {
                 $('#filterColumn').toggleClass('collapsed');
-                $('#tableColumn').toggleClass('col-md-8');
+                $('#tableColumn').toggleClass('expanded');
                 });
 
             $('#expandFilters').click(function() {
                 $('#filterColumn').removeClass('collapsed');
-                $('#tableColumn').removeClass('col-md-8');
+                $('#tableColumn').removeClass('expanded');
             });
         });
     </script>
