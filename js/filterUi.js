@@ -9,8 +9,9 @@ export function renderFilters(filterData) {
     const [headers, ...data] = filterData;
     const categoryIndex = headers.indexOf('CATEGORY');
     const nameIndex = headers.indexOf('NAME');
+    const keyIndex = headers.indexOf('KEY');
 
-    if (categoryIndex === -1 || nameIndex === -1) {
+    if (categoryIndex === -1 || nameIndex === -1 || keyIndex === -1) {
         console.error('Required columns not found in filter data');
         return;
     }
@@ -19,10 +20,11 @@ export function renderFilters(filterData) {
     data.forEach(row => {
         const category = row[categoryIndex];
         const name = row[nameIndex];
+        const key = row[keyIndex];
         if (!categories[category]) {
             categories[category] = [];
         }
-        categories[category].push(name);
+        categories[category].push({ name, key });
     });
 
     const filterSection = document.querySelector('.filter-section');
@@ -36,12 +38,12 @@ export function renderFilters(filterData) {
         const itemsDiv = document.createElement('div');
         itemsDiv.className = 'd-flex flex-wrap';
 
-        items.forEach(item => {
+        items.forEach(({ name, key }) => {
             const button = document.createElement('button');
             button.className = 'btn btn-outline-primary btn-sm m-1 filter-item';
-            button.textContent = item;
+            button.textContent = name;
             button.dataset.category = category;
-            button.dataset.item = item;
+            button.dataset.key = key;
             button.onclick = toggleFilter;
             itemsDiv.appendChild(button);
         });
@@ -60,7 +62,8 @@ function toggleFilter(event) {
 function updateFilterList() {
     const activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
         category: button.dataset.category,
-        item: button.dataset.item
+        key: button.dataset.key,
+        name: button.dataset.name
     }));
     console.log('Active filters:', activeFilters);
     // You can emit an event or call a function here to update the main table based on the active filters
