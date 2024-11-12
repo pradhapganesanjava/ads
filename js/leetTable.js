@@ -20,17 +20,27 @@ export function renderTable(data, activeFilters = []) {
     $('#sheetDataTable thead').html(`<tr>${tableHeaders}</tr>`);
 
     // Filter the data based on activeFilters
-    const filteredData = data.slice(1).filter(row => {
+    const filteredData = data.slice(1).filter((row, rowIndex) => {
         if (activeFilters.length === 0) return true;
         return activeFilters.every(filter => {
             const columnIndex = headers.indexOf(filter.key);
+            console.log(`Row ${rowIndex + 1}, Filter: ${filter.key}, Column Index: ${columnIndex}`);
             if (columnIndex !== -1) {
-                return row[columnIndex] === '1';
+                const cellValue = row[columnIndex];
+                console.log(`Cell Value: ${cellValue}, Type: ${typeof cellValue}`);
+                // Less strict comparison
+                return cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes';
             }
             // If the filter key is not a column name, check if it's a value in any of the columns
-            return headers.some((header, index) => row[index] === '1' && header === filter.key);
+            const matchingColumn = headers.findIndex((header, index) => {
+                const cellValue = row[index];
+                return (cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes') && header === filter.key;
+            });
+            console.log(`Matching Column for ${filter.key}: ${matchingColumn}`);
+            return matchingColumn !== -1;
         });
     });
+
 
     const tableData = filteredData.map(row => {
         return FILTER_HEADERS.map(header => {
