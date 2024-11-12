@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/ads.css">
     <link rel="stylesheet" href="css/filter.css">
+    <link rel="stylesheet" href="css/iframe.css">
 </head>
 <body>
     <div class="container-fluid">
@@ -58,7 +59,34 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <!-- <div id="iframeContainer" class="d-none">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 id="iframeTitle" class="mb-0">Content</h5>
+                            <button type="button" class="close" id="closeIframe" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <iframe id="contentIframe" style="width:100%; height:100%; border:none;"></iframe>
+                        </div>
+                    </div>
+                </div> -->
             </div>
+            <!-- <div id="iframeContainer" class="collapse">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 id="iframeTitle" class="mb-0">Content</h5>
+                        <button type="button" class="close" data-dismiss="collapse" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <iframe id="contentIframe" style="width:100%; height:600px; border:none;"></iframe>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Right Column - Fixed Width -->
             <div id="rightColumn"></div>
         </div>
     </div>
