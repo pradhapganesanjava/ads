@@ -1,2 +1,2 @@
-# pg-ads
-PGanesan ADS
+# ads
+PG ADS
