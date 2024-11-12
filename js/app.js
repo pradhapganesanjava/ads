@@ -1,18 +1,23 @@
 // js/app.js
-import { CLIENT_ID, API_KEY, DISCOVERY_DOC, SCOPES } from './const.js';
 import { loadGoogleApis, initializeGapiClient, initializeGisClient } from './googleApi.js';
-import { handleAuthClick, handleSignoutClick } from './auth.js';
 
 let tokenClient;
 
-export async function initializeApp() {
-    await loadGoogleApis();
-    await initializeGapiClient(API_KEY, DISCOVERY_DOC);
-    tokenClient = await initializeGisClient(CLIENT_ID, SCOPES);
-
-    document.getElementById('authorize_button').style.display = 'block';
-    document.getElementById('authorize_button').onclick = handleAuthClick;
-    document.getElementById('signout_button').onclick = handleSignoutClick;
+export async function initializeApp(CONFIG) {
+    try {
+        await loadGoogleApis();
+        await initializeGapiClient(CONFIG.API_KEY, CONFIG.DISCOVERY_DOC);
+        tokenClient = await initializeGisClient(CONFIG.CLIENT_ID, CONFIG.SCOPES);
+        return tokenClient;
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        throw error;
+    }
 }
 
-export { tokenClient };
+export function getTokenClient() {
+    if (!tokenClient) {
+        throw new Error('Token client not initialized. Call initializeApp first.');
+    }
+    return tokenClient;
+}

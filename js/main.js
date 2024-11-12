@@ -1,78 +1,58 @@
 // js/main.js
+import { CONFIG } from './config.js';
 import { initializeApp } from './app.js';
+import { updateState, state } from './state.js';
+import { updateUI } from './ui.js';
+import { handleError } from './error.js';
 import { handleAuth, handleSignout } from './auth.js';
 import { fetchSheetData } from './sheetOperations.js';
 import { renderTable } from './leetTable.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
-    setupEventListeners();
-});
+async function init() {
+    try {
+        await initializeApp(CONFIG);
+        setupEventListeners();
+        updateUI();
+    } catch (error) {
+        handleError(error);
+    }
+}
 
 function setupEventListeners() {
-    const authorizeButton = document.getElementById('authorize_button');
-    const signoutButton = document.getElementById('signout_button');
-
-    if (authorizeButton) {
-        authorizeButton.addEventListener('click', handleAuthClick);
-    } else {
-        console.error('Authorize button not found');
-    }
-
-    if (signoutButton) {
-        signoutButton.addEventListener('click', handleSignoutClick);
-    } else {
-        console.error('Signout button not found');
-    }
+    document.getElementById('authorize_button').addEventListener('click', handleAuthClick);
+    document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
 }
 
 async function handleAuthClick() {
     try {
+        updateState({ isLoading: true });
         const isAuthorized = await handleAuth();
+        updateState({ isAuthorized, isLoading: false });
         if (isAuthorized) {
-            updateButtonsState(true);
             await loadAndRenderData();
         }
     } catch (error) {
-        console.error('Authentication failed:', error);
-        document.getElementById('content').textContent = error.message;
+        handleError(error);
     }
 }
 
 function handleSignoutClick() {
     if (handleSignout()) {
-        updateButtonsState(false);
+        updateState({ isAuthorized: false });
         clearTable();
-        document.getElementById('content').textContent = 'Signed out successfully.';
     }
 }
 
 async function loadAndRenderData() {
     try {
+        updateState({ isLoading: true });
         const data = await fetchSheetData();
-        console.log('Fetched data:', data);
         renderTable(data);
     } catch (error) {
-        console.error('Error fetching and rendering data:', error);
-        document.getElementById('content').textContent = 'Error: ' + error.message;
+        handleError(error);
+    } finally {
+        updateState({ isLoading: false });
     }
 }
 
-function updateButtonsState(isAuthorized) {
-    const authorizeButton = document.getElementById('authorize_button');
-    const signoutButton = document.getElementById('signout_button');
-
-    if (isAuthorized) {
-        signoutButton.style.display = 'block';
-        authorizeButton.innerText = 'Refresh';
-    } else {
-        signoutButton.style.display = 'none';
-        authorizeButton.innerText = 'Authorize';
-    }
-}
-
-function clearTable() {
-    if ($.fn.DataTable.isDataTable('#sheetDataTable')) {
-        $('#sheetDataTable').DataTable().clear().destroy();
-    }
-}
+document.addEventListener('DOMContentLoaded', init);

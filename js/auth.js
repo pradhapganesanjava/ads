@@ -1,8 +1,9 @@
 // js/auth.js
-import { tokenClient } from './app.js';
+import { getTokenClient } from './app.js';
 
 export function handleAuth() {
     return new Promise((resolve, reject) => {
+        const tokenClient = getTokenClient();
         tokenClient.callback = async (resp) => {
             if (resp.error !== undefined) {
                 console.error('Authorization error:', resp.error);
