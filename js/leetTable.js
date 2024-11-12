@@ -2,6 +2,13 @@
 import { FILTER_HEADERS } from './const.js';
 
 export function renderTable(data) {
+
+    const tableElement = document.getElementById('sheetDataTable');
+    if (!tableElement) {
+        console.error('Table element not found');
+        return;
+    }
+    
     const headers = data[0];
     const filteredHeaderIndices = headers.reduce((acc, header, index) => {
         if (FILTER_HEADERS.includes(header)) {
