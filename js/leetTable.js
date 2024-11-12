@@ -10,7 +10,7 @@ export function renderTable(data, activeFilters = []) {
     
     const headers = data[0];
     const filteredHeaderIndices = headers.reduce((acc, header, index) => {
-        if (FILTER_HEADERS.includes(header)) {
+        if (FILTER_HEADERS.includes(header) || header === 'link') {
             acc[header] = index;
         }
         return acc;
@@ -45,6 +45,13 @@ export function renderTable(data, activeFilters = []) {
     const tableData = filteredData.map(row => {
         return FILTER_HEADERS.map(header => {
             const index = filteredHeaderIndices[header];
+            if (header === 'title') {
+                const titleIndex = filteredHeaderIndices['title'];
+                const linkIndex = filteredHeaderIndices['link'];
+                const title = row[titleIndex];
+                const link = row[linkIndex];
+                return `<a href="${link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${title}</a>`;
+            }
             return index !== undefined ? row[index] : '';
         });
     });
@@ -55,7 +62,15 @@ export function renderTable(data, activeFilters = []) {
 
     $('#sheetDataTable').DataTable({
         data: tableData,
-        columns: FILTER_HEADERS.map(header => ({ title: header })),
+        columns: FILTER_HEADERS.map(header => ({ 
+            title: header,
+            render: function(data, type, row) {
+                if (type === 'display' && header === 'title') {
+                    return data;  // Return the HTML string for the link
+                }
+                return data;
+            }
+        })),
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
         responsive: true,
@@ -66,13 +81,5 @@ export function renderTable(data, activeFilters = []) {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
-    });
-}
-
-export function initializeDataTable() {
-    $('#sheetDataTable').DataTable({
-        responsive: true,
-        pageLength: 25,
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
 }
