@@ -100,6 +100,9 @@ th {
 #sheetDataTable {
     height: 100%;
 }
+#sheetDataTable tbody tr {
+    line-height: 0.3;
+}
 
 /* Responsive styles */
 @media (max-width: 575.98px) {

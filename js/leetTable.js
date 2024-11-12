@@ -46,34 +46,6 @@ export function renderTable(data) {
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
     });
-
-    // $('#sheetDataTable').DataTable({
-    //     data: tableData,
-    //     columns: FILTER_HEADERS.map(header => ({ title: header })),
-    //     pageLength: 25,
-    //     lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
-    //     responsive: true,
-    //     scrollY: true,
-    //     scrollCollapse: true,
-    //     paging: true,
-    //     dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-    //     buttons: [
-    //         'copy', 'csv', 'excel', 'pdf', 'print'
-    //     ],
-    //     drawCallback: function (settings) {
-    //         var api = this.api();
-    //         var $table = $(api.table().node());
-
-    //         // Adjust the height of the scrollBody
-    //         var scrollBody = $table.closest('.dataTables_scrollBody');
-    //         var wrapper = $table.closest('.dataTables_wrapper');
-    //         var availableHeight = wrapper.height() - (wrapper.find('.dataTables_filter').outerHeight(true) + wrapper.find('.dataTables_info').outerHeight(true) + wrapper.find('.dataTables_paginate').outerHeight(true));
-    //         scrollBody.css('max-height', availableHeight + 'px');
-
-    //         // Adjust columns and redraw
-    //         api.columns.adjust().draw();
-    //     }
-    // });
 }
 
 export function initializeDataTable() {
