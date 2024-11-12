@@ -11,7 +11,9 @@ import { renderTable } from './leetTable.js';
 async function init() {
     try {
         await initializeApp(CONFIG);
+        initUI();
         setupEventListeners();
+        updateState({ isInitialized: true });
     } catch (error) {
         handleError(error);
     }
@@ -55,4 +57,3 @@ async function loadAndRenderData() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-document.addEventListener('DOMContentLoaded', initUI);
