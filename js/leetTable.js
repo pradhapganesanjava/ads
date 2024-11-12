@@ -51,7 +51,8 @@ export function renderTable(data, activeFilters = []) {
                 const linkIndex = filteredHeaderIndices['link'];
                 const title = row[titleIndex];
                 const link = row[linkIndex];
-                return `<a href="#" onclick="showIframe('${link}', '${title}'); return false;">${title}</a>`;
+                // return `<a href="#" onclick="showIframe('${link}', '${title}'); return false;">${title}</a>`;
+                return `<a href="${link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${title}</a>`;
             }
             return index !== undefined ? row[index] : '';
         });
