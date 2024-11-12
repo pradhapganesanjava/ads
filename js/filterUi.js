@@ -44,6 +44,7 @@ export function renderFilters(filterData) {
             button.textContent = name;
             button.dataset.category = category;
             button.dataset.key = key;
+            button.dataset.name = name;
             button.onclick = toggleFilter;
             itemsDiv.appendChild(button);
         });
