@@ -7,7 +7,7 @@ import { handleError } from './error.js';
 import { handleAuth, handleSignout } from './auth.js';
 import { fetchSheetData } from './sheetOperations.js';
 import { renderTable } from './leetTable.js';
-import { renderFilters } from './filterUi.js';
+import { renderFilters, setGlobalData } from './filterUi.js';
 
 async function init() {
     try {
@@ -49,6 +49,7 @@ async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
         const { mainData, filterData } = await fetchSheetData();
+        setGlobalData(mainData);
         renderTable(mainData);
         renderFilters(filterData);
     } catch (error) {

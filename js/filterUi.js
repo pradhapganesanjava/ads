@@ -1,4 +1,7 @@
 // js/filterUi.js
+import { renderTable } from './leetTable.js';
+
+let globalData = null;
 
 export function renderFilters(filterData) {
     if (!filterData || filterData.length < 2) {
@@ -67,5 +70,11 @@ function updateFilterList() {
         name: button.dataset.name
     }));
     console.log('Active filters:', activeFilters);
-    // You can emit an event or call a function here to update the main table based on the active filters
+    if (globalData) {
+        renderTable(globalData, activeFilters);
+    }
+}
+
+export function setGlobalData(data) {
+    globalData = data;
 }
