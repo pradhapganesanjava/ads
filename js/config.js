@@ -5,5 +5,5 @@ export const CONFIG = {
     API_KEY: null,
     DISCOVERY_DOC: 'https://sheets.googleapis.com/$discovery/rest?version=v4',
     SCOPES: 'https://www.googleapis.com/auth/spreadsheets.readonly',
-    REDIRECT_URI : `https://pradhapganesanjava.github.io/pg-ads/index.html`
+    REDIRECT_URI : `https://pradhapganesanjava.github.io/ads`
 };
