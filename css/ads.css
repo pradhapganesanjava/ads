@@ -28,12 +28,21 @@ th {
     overflow-y: auto;
 }
 
-.collapsible-section {
-    transition: max-height 0.3s ease-out;
-    max-height: 0;
+#filterColumn {
+    transition: all 0.3s ease-out;
+}
+
+#filterColumn.collapsed {
+    max-width: 0;
+    padding: 0;
     overflow: hidden;
 }
 
-.collapsible-section.show {
-    max-height: 1000px;
+#tableColumn {
+    transition: all 0.3s ease-out;
+}
+
+#tableContainer {
+    margin-top: 20px;
+    /* Added vertical space */
 }
