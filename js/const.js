@@ -8,3 +8,5 @@ export const REDIRECT_URI = `https://pradhapganesanjava.github.io/pg-ads/index.h
 export const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 export const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 export const API_KEY = 'null';
+
+export const FILTER_HEADERS = ['ID', 'title', 'titleSlug', 'difficulty', 'frequency'];

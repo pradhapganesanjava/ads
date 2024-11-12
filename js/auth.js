@@ -1,8 +1,9 @@
 // js/auth.js
 import { tokenClient } from './app.js';
-import { listMajors } from './sheetOperations.js';
+import { fetchSheetData } from './sheetOperations.js';
+import { renderTable } from './leetTable.js';
 
-export function handleAuthClick() {
+export function handleAuthClick(callback) {
     tokenClient.callback = async (resp) => {
         if (resp.error !== undefined) {
             console.error('Authorization error:', resp.error);
@@ -12,17 +13,19 @@ export function handleAuthClick() {
         document.getElementById('signout_button').style.display = 'block';
         document.getElementById('authorize_button').innerText = 'Refresh';
         try {
-            await listMajors();
+            const data = await fetchSheetData();
+            renderTable(data);
+            if (callback) callback();
         } catch (error) {
-            console.error('Error in listMajors:', error);
+            console.error('Error fetching and rendering data:', error);
             updateContent('Error: ' + error.message);
         }
     };
 
     if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({prompt: 'consent'});
+        tokenClient.requestAccessToken({ prompt: 'consent' });
     } else {
-        tokenClient.requestAccessToken({prompt: ''});
+        tokenClient.requestAccessToken({ prompt: '' });
     }
 }
 
@@ -34,6 +37,10 @@ export function handleSignoutClick() {
         updateContent('');
         document.getElementById('authorize_button').innerText = 'Authorize';
         document.getElementById('signout_button').style.display = 'none';
+        // Clear the table
+        if ($.fn.DataTable.isDataTable('#sheetDataTable')) {
+            $('#sheetDataTable').DataTable().clear().destroy();
+        }
     }
 }
 

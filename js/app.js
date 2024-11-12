@@ -2,7 +2,6 @@
 import { CLIENT_ID, API_KEY, DISCOVERY_DOC, SCOPES } from './const.js';
 import { loadGoogleApis, initializeGapiClient, initializeGisClient } from './googleApi.js';
 import { handleAuthClick, handleSignoutClick } from './auth.js';
-import { listMajors } from './sheetOperations.js';
 
 let tokenClient;
 

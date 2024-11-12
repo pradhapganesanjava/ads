@@ -1,17 +1,27 @@
 // js/main.js
 import { initializeApp } from './app.js';
-import { listMajors } from './sheetOperations.js';
+import { listMajors, fetchSheetData } from './sheetOperations.js';
 import { renderTable, initializeDataTable } from './leetTable.js';
 
 async function loadAndRenderData() {
     try {
-        const data = await listMajors();
+        const data = await fetchSheetData();
         renderTable(data);
     } catch (error) {
         console.error('Error loading and rendering data:', error);
         $('#content').text('Error: ' + error.message);
     }
 }
+
+// async function loadAndRenderData() {
+//     try {
+//         const data = await listMajors();
+//         renderTable(data);
+//     } catch (error) {
+//         console.error('Error loading and rendering data:', error);
+//         $('#content').text('Error: ' + error.message);
+//     }
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
