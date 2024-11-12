@@ -22,6 +22,7 @@ header {
     flex-grow: 1;
     display: flex;
     overflow: hidden;
+    height: calc(100vh - 100px);
 }
 
 /* Table styles */
@@ -48,32 +49,41 @@ th {
     max-height: 50vh;
 } */
 .dataTables_wrapper {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .dataTables_scroll {
-    flex-grow: 1;
+    /* flex-grow: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; */
+    flex: 1;
+    overflow: hidden;
 }
 
 .dataTables_scrollBody {
-    flex-grow: 1;
-    height: auto !important;
-    /* Override DataTables inline style */
+    max-height: none !important;
+    height: 100% !important;
 }
 
 .dataTables_wrapper .dataTables_paginate,
 .dataTables_wrapper .dataTables_info {
     margin-top: 10px;
 }
+/* Ensure pagination and info are outside the scroll area */
+.dataTables_info,
+.dataTables_paginate {
+    flex-shrink: 0;
+}
 
 #tableContainer {
-    flex-grow: 1;
+    /* flex-grow: 1; */
+    flex: 1;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* height: 100%; */
 }
 
 #tableColumn {
@@ -82,7 +92,8 @@ th {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 150px);
+    /* height: calc(100vh - 150px); */
+    height: 100%;
 }
 
 /* Ensure the table takes up all available space */
