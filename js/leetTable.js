@@ -41,20 +41,7 @@ export function renderTable(data, activeFilters = []) {
         });
     });
 
-
-    // const tableData = filteredData.map(row => {
-    //     return FILTER_HEADERS.map(header => {
-    //         const index = filteredHeaderIndices[header];
-    //         if (header === 'title') {
-    //             const titleIndex = filteredHeaderIndices['title'];
-    //             const linkIndex = filteredHeaderIndices['link'];
-    //             const title = row[titleIndex];
-    //             const link = row[linkIndex];
-    //             return `<a href="${link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${title}</a>`;
-    //         }
-    //         return index !== undefined ? row[index] : '';
-    //     });
-    // });
+    //         return `<a href="${link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${title}</a>`;
 
     const tableData = filteredData.map(row => {
         return FILTER_HEADERS.map(header => {

@@ -25,11 +25,9 @@ function setupEventListeners() {
     document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
 
     // Add event listener for closing the iframe
-    const closeButton = document.querySelector('#iframeContainer .close');
+    const closeButton = document.getElementById('closeIframe');
     if (closeButton) {
-        closeButton.addEventListener('click', function () {
-            $('#iframeContainer').collapse('hide');
-        });
+        closeButton.addEventListener('click', hideIframe);
     } else {
         console.warn('Close button for iframe not found');
     }
@@ -73,19 +71,27 @@ document.addEventListener('DOMContentLoaded', init);
 
 // Add the showIframe function here
 window.showIframe = function (url, title) {
-    const iframe = document.getElementById('contentIframe');
     const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+    const iframe = document.getElementById('contentIframe');
     const iframeTitle = document.getElementById('iframeTitle');
 
     if (iframe && iframeContainer && iframeTitle) {
         iframe.src = url;
         iframeTitle.textContent = title;
 
-        $(iframeContainer).collapse('show');
-
-        // Scroll to the iframe
-        iframeContainer.scrollIntoView({ behavior: 'smooth' });
+        tableContainer.classList.add('d-none');
+        iframeContainer.classList.remove('d-none');
     } else {
         console.error('Required elements for iframe not found');
     }
+}
+
+// Add this function to hide the iframe and show the table
+window.hideIframe = function () {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+
+    iframeContainer.classList.add('d-none');
+    tableContainer.classList.remove('d-none');
 }
