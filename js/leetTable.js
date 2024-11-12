@@ -37,7 +37,8 @@ export function renderTable(data) {
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
         responsive: true,
-        scrollY: '50vh', // Adjust this value as needed
+        // scrollY: '50vh', // Adjust this value as needed
+        scrollY: '100%', // Use percentage instead of vh units
         scrollCollapse: true,
         paging: true,
         dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
