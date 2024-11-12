@@ -23,6 +23,7 @@ th {
     }
 }
 
+/** Filter Section **/
 .filter-section {
     max-height: calc(100vh - 150px);
     overflow-y: auto;
@@ -33,9 +34,8 @@ th {
 }
 
 #filterColumn.collapsed {
-    max-width: 0;
-    padding: 0;
-    overflow: hidden;
+    flex: 0 0 40px;
+    max-width: 40px;
 }
 
 #tableColumn {
@@ -44,5 +44,20 @@ th {
 
 #tableContainer {
     margin-top: 20px;
-    /* Added vertical space */
+}
+
+.expand-filters {
+    display: none;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 10px 0;
+    height: 100%;
+}
+
+#filterColumn.collapsed .expand-filters {
+    display: block;
+}
+
+#filterColumn.collapsed .card {
+    display: none;
 }
