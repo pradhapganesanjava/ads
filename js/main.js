@@ -47,13 +47,19 @@ function handleSignoutClick() {
 async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
-        const data = await fetchSheetData();
-        renderTable(data);
+        const { mainData, filterData } = await fetchSheetData();
+        renderTable(mainData);
+        renderFilters(filterData);  // You'll need to implement this function
     } catch (error) {
         handleError(error);
     } finally {
         updateState({ isLoading: false });
     }
+}
+
+function renderFilters(filterData) {
+    // Implement this function to render your filters
+    console.log('Filter data:', filterData);
 }
 
 document.addEventListener('DOMContentLoaded', init);
