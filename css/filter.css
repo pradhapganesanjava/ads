@@ -1,0 +1,63 @@
+/* Filter Section */
+.filter-section {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+#filterColumn {
+    transition: all 0.3s ease-out;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+}
+
+#filterColumn.collapsed {
+    width: 60px;
+    align-items: center;
+}
+
+.filter-item.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.filter-category {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.filter-category:last-child {
+    border-bottom: none;
+}
+.expand-filters {
+    display: none;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 10px 0;
+    height: 100%;
+    justify-content: top;
+    align-items: center;
+}
+
+#filterColumn.collapsed .expand-filters {
+    display: flex;
+    width: 100%;
+}
+
+#filterColumn.collapsed .card {
+    display: none;
+}
+
+/* Additional style to ensure the card takes full width when expanded */
+#filterColumn .card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#filterColumn .card-body {
+    flex-grow: 1;
+    overflow-y: auto;
+}

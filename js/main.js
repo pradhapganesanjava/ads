@@ -49,7 +49,7 @@ async function loadAndRenderData() {
         updateState({ isLoading: true });
         const { mainData, filterData } = await fetchSheetData();
         renderTable(mainData);
-        renderFilters(filterData);  // You'll need to implement this function
+        renderFilters(filterData);
     } catch (error) {
         handleError(error);
     } finally {
