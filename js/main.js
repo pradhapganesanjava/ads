@@ -82,9 +82,9 @@ function showIframe({ url, title }) {
 
         tableContainer.classList.add('d-none');
         iframeContainer.classList.remove('d-none');
-        } else {
+    } else {
             console.error('Required elements for iframe not found');
-        eventBus.publish('error', 'Failed to load iframe');
+            eventBus.publish('error', 'Failed to load iframe');
     }
 }
 

@@ -112,8 +112,6 @@
                 $('#tableColumn').removeClass('expanded');
             });
         });
-        // In main.js, add this to the showIframe function
-        iframe.onerror = () => eventBus.publish('error', 'Failed to load content');
         // $(window).on('resize', function () {
         //     $('#sheetDataTable').DataTable().columns.adjust().draw();
         // });
