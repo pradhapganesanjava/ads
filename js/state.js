@@ -1,3 +1,6 @@
+// state.js
+const listeners = [];
+
 export const state = {
     isAuthorized: false,
     isLoading: false
@@ -5,5 +8,15 @@ export const state = {
 
 export function updateState(newState) {
     Object.assign(state, newState);
-    updateUI();
+    listeners.forEach(listener => listener(state));
+}
+
+export function subscribe(listener) {
+    listeners.push(listener);
+    return () => {
+        const index = listeners.indexOf(listener);
+        if (index > -1) {
+            listeners.splice(index, 1);
+        }
+    };
 }

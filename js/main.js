@@ -1,8 +1,8 @@
 // js/main.js
 import { CONFIG } from './config.js';
 import { initializeApp } from './app.js';
-import { updateState, state } from './state.js';
-import { updateUI } from './ui.js';
+import { updateState } from './state.js';
+import { initUI } from './ui.js';
 import { handleError } from './error.js';
 import { handleAuth, handleSignout } from './auth.js';
 import { fetchSheetData } from './sheetOperations.js';
@@ -12,7 +12,6 @@ async function init() {
     try {
         await initializeApp(CONFIG);
         setupEventListeners();
-        updateUI();
     } catch (error) {
         handleError(error);
     }
@@ -56,3 +55,4 @@ async function loadAndRenderData() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', initUI);

@@ -1,8 +1,12 @@
 // ui.js
+import { state, subscribe } from './state.js';
 
-import { state } from './state.js';
+export function initUI() {
+    updateUI(state);
+    subscribe(updateUI);
+}
 
-export function updateHomeUI() {
+function updateUI(state) {
     const authorizeButton = document.getElementById('authorize_button');
     const signoutButton = document.getElementById('signout_button');
 
