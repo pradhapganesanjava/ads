@@ -8,12 +8,14 @@
     import { fetchSheetData } from './sheetOperations.js';
     import { renderTable } from './leetTable.js';
     import { renderFilters, setGlobalData } from './filterUi.js';
+import { eventBus } from './eventBus.js';
 
     async function init() {
         try {
             await initializeApp(CONFIG);
             initUI();
             setupEventListeners();
+            setupEventSubscriptions();
             updateState({ isInitialized: true });
         } catch (error) {
             handleError(error);
@@ -23,14 +25,14 @@
     function setupEventListeners() {
         document.getElementById('authorize_button').addEventListener('click', handleAuthClick);
         document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
+        document.getElementById('closeIframe').addEventListener('click', () => eventBus.publish('closeIframe'));
+}
 
-        // Add event listener for closing the iframe
-        const closeButton = document.getElementById('closeIframe');
-        if (closeButton) {
-            closeButton.addEventListener('click', hideIframe);
-        } else {
-            console.warn('Close button for iframe not found');
-        }
+function setupEventSubscriptions() {
+    eventBus.subscribe('showIframe', showIframe);
+    eventBus.subscribe('closeIframe', hideIframe);
+    eventBus.subscribe('showTable', showTable);
+    eventBus.subscribe('error', handleViewError);
     }
 
     async function handleAuthClick() {
@@ -60,6 +62,7 @@
             setGlobalData(mainData);
             renderTable(mainData);
             renderFilters(filterData);
+        eventBus.publish('showTable');
         } catch (error) {
             handleError(error);
         } finally {
@@ -67,32 +70,44 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', init);
-
-    // Add the showIframe function here
-    window.showIframe = function (url, title) {
-        const iframeContainer = document.getElementById('iframeContainer');
-        const tableContainer = document.getElementById('tableContainer');
+function showIframe({ url, title }) {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
         const iframe = document.getElementById('contentIframe');
         const iframeTitle = document.getElementById('iframeTitle');
 
-        if (iframe && iframeContainer && iframeTitle) {
+    if (iframe && iframeContainer && iframeTitle) {
             iframe.src = url;
             iframeTitle.textContent = title;
 
-            tableContainer.style.display = 'none';
-            iframeContainer.classList.add('active');
+        tableContainer.classList.add('d-none');
+        iframeContainer.classList.remove('d-none');
         } else {
             console.error('Required elements for iframe not found');
-        }
+        eventBus.publish('error', 'Failed to load iframe');
     }
+}
 
-    window.hideIframe = function () {
-        const iframeContainer = document.getElementById('iframeContainer');
-        const tableContainer = document.getElementById('tableContainer');
+function hideIframe() {
+    eventBus.publish('showTable');
+}
 
-        if (iframeContainer && tableContainer) {
-            iframeContainer.classList.remove('active');
-            tableContainer.style.display = 'flex';
-        }
-    }
+function showTable() {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+
+    iframeContainer.classList.add('d-none');
+    tableContainer.classList.remove('d-none');
+}
+
+function handleViewError(errorMessage) {
+    console.error(errorMessage);
+    eventBus.publish('showTable');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// Make showIframe available globally for onclick handlers
+window.showIframe = function(url, title) {
+    eventBus.publish('showIframe', { url, title });
+};

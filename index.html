@@ -52,13 +52,14 @@
 
             <!-- Center Column - Table Container -->
             <div id="contentColumn">
+                <div id="errorContainer" class="alert alert-danger d-none" role="alert"></div>
                 <div id="tableContainer">
                     <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
                         <thead></thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div id="iframeContainer" style="display: none;">
+                <div id="iframeContainer" class="d-none">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 id="iframeTitle" class="mb-0">Content</h5>
@@ -111,6 +112,8 @@
                 $('#tableColumn').removeClass('expanded');
             });
         });
+        // In main.js, add this to the showIframe function
+        iframe.onerror = () => eventBus.publish('error', 'Failed to load content');
         // $(window).on('resize', function () {
         //     $('#sheetDataTable').DataTable().columns.adjust().draw();
         // });
