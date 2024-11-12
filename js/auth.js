@@ -14,6 +14,7 @@ export function handleAuthClick(callback) {
         document.getElementById('authorize_button').innerText = 'Refresh';
         try {
             const data = await fetchSheetData();
+            console.log('handleAuthClick Data:', data);
             renderTable(data);
             if (callback) callback();
         } catch (error) {
