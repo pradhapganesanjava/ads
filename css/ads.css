@@ -40,6 +40,19 @@ td {
 th {
     background-color: #f2f2f2;
 }
+.dataTables_wrapper .dataTables_scroll {
+    clear: both;
+}
+
+.dataTables_wrapper .dataTables_scrollBody {
+    max-height: 50vh;
+    /* Adjust this value as needed */
+}
+
+.dataTables_wrapper .dataTables_paginate,
+.dataTables_wrapper .dataTables_info {
+    margin-top: 10px;
+}
 
 /* Responsive styles */
 @media (max-width: 575.98px) {
@@ -105,7 +118,7 @@ th {
 
 #tableContainer {
     flex-grow: 1;
-    overflow: auto;
+    overflow: hidden;
     width: 100%;
 }
 

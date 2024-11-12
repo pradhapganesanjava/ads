@@ -37,7 +37,10 @@ export function renderTable(data) {
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
         responsive: true,
-        dom: 'Bfrtip',
+        scrollY: '50vh', // Adjust this value as needed
+        scrollCollapse: true,
+        paging: true,
+        dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
