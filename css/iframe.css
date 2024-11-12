@@ -1,23 +1,18 @@
-.main-content {
-    flex-grow: 1 !important;
-    display: flex !important;
-    overflow: hidden !important;
-    height: calc(100vh - 100px) !important;
-}
-
-#contentColumn {
-    flex-grow: 1;
+#iframeContainer {
+    flex: 1 0 100%;
+    /* This makes each container take up full height of contentColumn */
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
-#tableContainer,
 #iframeContainer {
-    flex-grow: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
+    display: none;
+    /* Hide by default */
+}
+
+#iframeContainer.active {
+    display: flex;
+    /* Show when active class is added */
 }
 
 #iframeContainer .card {

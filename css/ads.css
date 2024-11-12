@@ -25,6 +25,13 @@ header {
     height: calc(100vh - 100px);
 }
 
+#contentColumn {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 /* Table styles */
 table {
     border-collapse: collapse;
@@ -80,7 +87,8 @@ th {
 #tableContainer {
     /* flex-grow: 1; */
     flex: 1;
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow: auto;
     display: flex;
     flex-direction: column;
     /* height: 100%; */
@@ -99,6 +107,7 @@ th {
 /* Ensure the table takes up all available space */
 #sheetDataTable {
     height: 100%;
+    width: 100%;
 }
 #sheetDataTable tbody tr {
     line-height: 0.3;

@@ -71,8 +71,8 @@
 
     // Add the showIframe function here
     window.showIframe = function (url, title) {
-        const contentColumn = document.getElementById('contentColumn');
         const iframeContainer = document.getElementById('iframeContainer');
+        const tableContainer = document.getElementById('tableContainer');
         const iframe = document.getElementById('contentIframe');
         const iframeTitle = document.getElementById('iframeTitle');
 
@@ -80,31 +80,19 @@
             iframe.src = url;
             iframeTitle.textContent = title;
 
-            // Hide all direct children of contentColumn except iframeContainer
-            Array.from(contentColumn.children).forEach(child => {
-                if (child !== iframeContainer) {
-                    child.style.display = 'none';
-                }
-            });
-
-            iframeContainer.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            iframeContainer.classList.add('active');
         } else {
             console.error('Required elements for iframe not found');
         }
     }
 
     window.hideIframe = function () {
-        const contentColumn = document.getElementById('contentColumn');
         const iframeContainer = document.getElementById('iframeContainer');
+        const tableContainer = document.getElementById('tableContainer');
 
-        if (iframeContainer) {
-            iframeContainer.style.display = 'none';
-
-            // Show all other direct children of contentColumn
-            Array.from(contentColumn.children).forEach(child => {
-                if (child !== iframeContainer) {
-                    child.style.display = '';
-                }
-            });
+        if (iframeContainer && tableContainer) {
+            iframeContainer.classList.remove('active');
+            tableContainer.style.display = 'flex';
         }
     }
