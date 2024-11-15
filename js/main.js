@@ -18,7 +18,6 @@ async function init() {
         setupEventListeners();
         setupFilterSolsToggle();
         updateState({ isInitialized: true });
-        initializeLayout()
     } catch (error) {
         handleError(error);
     }
@@ -37,38 +36,21 @@ function setupEventListeners() {
 function toggleFilterColumn() {
     const filterColumn = document.getElementById('filterColumn');
     filterColumn.classList.toggle('collapsed');
-    adjustContentColumn();
 }
 
 function expandFilterColumn() {
     const filterColumn = document.getElementById('filterColumn');
     filterColumn.classList.remove('collapsed');
-    adjustContentColumn();
 }
 
 function toggleFilterSolsColumn() {
     const filterSolsColumn = document.getElementById('filterSolsColumn');
     filterSolsColumn.classList.toggle('collapsed');
-    adjustContentColumn();
 }
 
 function expandFilterSolsColumn() {
     const filterSolsColumn = document.getElementById('filterSolsColumn');
     filterSolsColumn.classList.remove('collapsed');
-    adjustContentColumn();
-}
-
-function adjustContentColumn() {
-    const contentColumn = document.getElementById('contentColumn');
-    const table = $('#sheetDataTable').DataTable();
-    if (table) {
-        table.columns.adjust().draw();
-    }
-}
-
-// Call this function after the table is initially rendered
-function initializeLayout() {
-    adjustContentColumn();
 }
 
 function setupEventSubscriptions() {
