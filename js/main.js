@@ -71,14 +71,14 @@ function adjustContentColumnWidth() {
     const contentColumn = document.getElementById('contentColumn');
 
     if (filterColumn.classList.contains('collapsed') && filterSolsColumn.classList.contains('collapsed')) {
-        contentColumn.classList.add('col-md-12');
-        contentColumn.classList.remove('col-md-6');
+        contentColumn.classList.add('col-md-11');
+        contentColumn.classList.remove('col-md-5');
     } else if (filterColumn.classList.contains('collapsed') || filterSolsColumn.classList.contains('collapsed')) {
-        contentColumn.classList.add('col-md-9');
-        contentColumn.classList.remove('col-md-6', 'col-md-12');
+        contentColumn.classList.add('col-md-8');
+        contentColumn.classList.remove('col-md-5', 'col-md-11');
     } else {
-        contentColumn.classList.add('col-md-6');
-        contentColumn.classList.remove('col-md-9', 'col-md-12');
+        contentColumn.classList.add('col-md-5');
+        contentColumn.classList.remove('col-md-8', 'col-md-11');
     }
 }
 
