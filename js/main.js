@@ -1,29 +1,31 @@
-    // js/main.js
-    import { CONFIG } from './config.js';
-    import { initializeApp } from './app.js';
-    import { updateState } from './state.js';
-    import { initUI } from './ui.js';
-    import { handleError } from './error.js';
-    import { handleAuth, handleSignout } from './auth.js';
-    import { fetchSheetData } from './sheetOperations.js';
-    import { renderTable } from './leetTable.js';
-    import { renderFilters, setGlobalData } from './filterUi.js';
+// js/main.js
+import { CONFIG } from './config.js';
+import { initializeApp } from './app.js';
+import { updateState } from './state.js';
+import { initUI } from './ui.js';
+import { handleError } from './error.js';
+import { handleAuth, handleSignout } from './auth.js';
+import { fetchSheetData } from './sheetOperations.js';
+import { renderTable } from './leetTable.js';
+import { renderFilters, setGlobalData } from './filterUi.js';
+import { renderFilterSols, setGlobalData as setFilterSolsGlobalData, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 
-    async function init() {
-        try {
-            await initializeApp(CONFIG);
-            initUI();
-            setupEventListeners();
-            updateState({ isInitialized: true });
-        } catch (error) {
-            handleError(error);
-        }
+async function init() {
+    try {
+        await initializeApp(CONFIG);
+        initUI();
+        setupEventListeners();
+        setupFilterSolsToggle();
+        updateState({ isInitialized: true });
+    } catch (error) {
+        handleError(error);
     }
+}
 
-    function setupEventListeners() {
-        document.getElementById('authorize_button').addEventListener('click', handleAuthClick);
-        document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
+function setupEventListeners() {
+    document.getElementById('authorize_button').addEventListener('click', handleAuthClick);
+    document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
 }
 
 function setupEventSubscriptions() {
@@ -31,42 +33,44 @@ function setupEventSubscriptions() {
     eventBus.subscribe('closeIframe', hideIframe);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
-    }
+}
 
-    async function handleAuthClick() {
-        try {
-            updateState({ isLoading: true });
-            const isAuthorized = await handleAuth();
-            updateState({ isAuthorized, isLoading: false });
-            if (isAuthorized) {
-                await loadAndRenderData();
-            }
-        } catch (error) {
-            handleError(error);
+async function handleAuthClick() {
+    try {
+        updateState({ isLoading: true });
+        const isAuthorized = await handleAuth();
+        updateState({ isAuthorized, isLoading: false });
+        if (isAuthorized) {
+            await loadAndRenderData();
         }
+    } catch (error) {
+        handleError(error);
     }
+}
 
-    function handleSignoutClick() {
-        if (handleSignout()) {
-            updateState({ isAuthorized: false });
-            clearTable();
-        }
+function handleSignoutClick() {
+    if (handleSignout()) {
+        updateState({ isAuthorized: false });
+        clearTable();
     }
+}
 
-    async function loadAndRenderData() {
-        try {
-            updateState({ isLoading: true });
-            const { mainData, filterData } = await fetchSheetData();
-            setGlobalData(mainData);
-            renderTable(mainData);
-            renderFilters(filterData);
+async function loadAndRenderData() {
+    try {
+        updateState({ isLoading: true });
+        const { mainData, filterData } = await fetchSheetData();
+        setGlobalData(mainData);
+        setFilterSolsGlobalData(mainData);
+        renderTable(mainData);
+        renderFilters(filterData);
+        renderFilterSols(filterData);
         eventBus.publish('showTable');
-        } catch (error) {
-            handleError(error);
-        } finally {
-            updateState({ isLoading: false });
-        }
+    } catch (error) {
+        handleError(error);
+    } finally {
+        updateState({ isLoading: false });
     }
+}
 
 function showIframe({ url, title }) {
     const iframeContainer = document.getElementById('iframeContainer');
@@ -104,8 +108,3 @@ function handleViewError(errorMessage) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
-// Make showIframe available globally for onclick handlers
-window.showIframe = function(url, title) {
-    eventBus.publish('showIframe', { url, title });
-};

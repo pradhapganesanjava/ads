@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/ads.css">
     <link rel="stylesheet" href="css/filter.css">
+    <link rel="stylesheet" href="css/filterSols.css">
 </head>
 <body>
     <div class="container-fluid">
@@ -59,7 +60,26 @@
                     </table>
                 </div>
             </div>
-            <div id="rightColumn"></div>
+
+            <!-- Right Column - Filter Sols Section -->
+            <div id="filterSolsColumn">
+                <button class="btn btn-link collapse-filter-sols" id="toggleFilterSols">
+                    <i class="fas fa-chevron-left"></i> Collapse Filter Sols
+                </button>
+                <div class="card h-100">
+                    <div class="card-header" id="filterSolsHeader">
+                        <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                            <span>Filter Sols</span>
+                        </h5>
+                    </div>
+                    <div id="filterSolsCollapse" class="collapse show h-100">
+                        <div class="card-body filter-sols-section">
+                            <!-- Filter sols content will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -94,6 +114,10 @@
             $('#expandFilters').click(function() {
                 $('#filterColumn').removeClass('collapsed');
                 $('#tableColumn').removeClass('expanded');
+            });
+
+            $('#toggleFilterSols').click(function () {
+                $('#filterSolsColumn').toggleClass('filter-sols-open');
             });
         });
         // $(window).on('resize', function () {

@@ -1,0 +1,40 @@
+#filterSolsColumn {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+#filterSolsColumn.filter-sols-open {
+    right: 0;
+}
+
+.collapse-filter-sols {
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.filter-sols-section {
+    padding: 15px;
+}
+
+.filter-sols-item {
+    margin: 2px;
+}
+
+.filter-sols-item.active {
+    background-color: #007bff;
+    color: white;
+}
