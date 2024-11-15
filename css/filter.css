@@ -8,10 +8,17 @@
 }
 
 #filterColumn {
-    transition: all 0.3s ease-out;
+    /* transition: all 0.3s ease-out; */
     display: flex;
     flex-direction: column;
 }
+
+#filterColumn.collapsed .expand-filters {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
 
 #filterColumn.collapsed {
     max-width: 60px;
@@ -20,12 +27,6 @@
 
 #filterColumn.collapsed .card {
     display: none;
-}
-
-#filterColumn.collapsed .expand-filters {
-    display: flex;
-    width: 100%;
-    height: 100vh;
 }
 
 .expand-filters {
@@ -62,4 +63,13 @@
 #filterColumn .card-body {
     flex-grow: 1;
     overflow-y: auto;
+}
+
+.filter-column {
+    flex: 0 0 300px;
+    transition: all 0.3s ease-out;
+}
+
+.filter-column.collapsed{
+    flex: 0 0 60px;
 }

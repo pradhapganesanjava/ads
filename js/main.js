@@ -35,51 +35,22 @@ function setupEventListeners() {
 
 function toggleFilterColumn() {
     const filterColumn = document.getElementById('filterColumn');
-    const contentColumn = document.getElementById('contentColumn');
     filterColumn.classList.toggle('collapsed');
-    contentColumn.classList.toggle('expanded-right');
-    adjustContentColumnWidth();
 }
 
 function expandFilterColumn() {
     const filterColumn = document.getElementById('filterColumn');
-    const contentColumn = document.getElementById('contentColumn');
     filterColumn.classList.remove('collapsed');
-    contentColumn.classList.remove('expanded-right');
-    adjustContentColumnWidth();
 }
 
 function toggleFilterSolsColumn() {
     const filterSolsColumn = document.getElementById('filterSolsColumn');
-    const contentColumn = document.getElementById('contentColumn');
     filterSolsColumn.classList.toggle('collapsed');
-    contentColumn.classList.toggle('expanded-left');
-    adjustContentColumnWidth();
 }
 
 function expandFilterSolsColumn() {
     const filterSolsColumn = document.getElementById('filterSolsColumn');
-    const contentColumn = document.getElementById('contentColumn');
     filterSolsColumn.classList.remove('collapsed');
-    contentColumn.classList.remove('expanded-left');
-    adjustContentColumnWidth();
-}
-
-function adjustContentColumnWidth() {
-    const filterColumn = document.getElementById('filterColumn');
-    const filterSolsColumn = document.getElementById('filterSolsColumn');
-    const contentColumn = document.getElementById('contentColumn');
-
-    if (filterColumn.classList.contains('collapsed') && filterSolsColumn.classList.contains('collapsed')) {
-        contentColumn.classList.add('col-md-11');
-        contentColumn.classList.remove('col-md-5');
-    } else if (filterColumn.classList.contains('collapsed') || filterSolsColumn.classList.contains('collapsed')) {
-        contentColumn.classList.add('col-md-8');
-        contentColumn.classList.remove('col-md-5', 'col-md-11');
-    } else {
-        contentColumn.classList.add('col-md-5');
-        contentColumn.classList.remove('col-md-8', 'col-md-11');
-    }
 }
 
 function setupEventSubscriptions() {

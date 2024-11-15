@@ -29,7 +29,8 @@
 
         <div class="row main-content">
             <!-- Left Column - Filter Section -->
-            <div id="filterColumn" class="col-md-3 p-0">
+            <!-- <div id="filterColumn" class="col-md-3 p-0"> -->
+            <div id="filterColumn" class="filter-column">
                 <button class="btn btn-link expand-filters" id="expandFilters">
                     <i class="fas fa-chevron-right"></i> Expand Filters
                 </button>
@@ -51,7 +52,7 @@
             </div>
 
             <!-- Center Column - Table Container -->
-            <div id="contentColumn" class="col-md-6">
+            <div id="contentColumn" class="content-column">
                 <div id="errorContainer" class="alert alert-danger d-none" role="alert"></div>
                 <div id="tableContainer">
                     <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
@@ -62,7 +63,8 @@
             </div>
 
             <!-- Right Column - Filter Sols Section -->
-            <div id="filterSolsColumn" class="col-md-3 p-0">
+            <!-- <div id="filterSolsColumn" class="col-md-3 p-0"> -->
+            <div id="filterSolsColumn" class="filter-sols-column">
                 <button class="btn btn-link expand-filter-sols" id="expandFilterSols">
                     <i class="fas fa-chevron-left"></i> Expand Filter Sols
                 </button>
@@ -106,29 +108,5 @@
 
     <!-- Your custom script -->
     <script type="module" src="js/main.js"></script>
-
-    <!-- <script>
-            $(document).ready(function () {
-                $('#collapseFilters').click(function () {
-                    $('#filterColumn').toggleClass('collapsed');
-                    $('#contentColumn').toggleClass('expanded-right');
-                });
-
-                $('#expandFilters').click(function () {
-                    $('#filterColumn').removeClass('collapsed');
-                    $('#contentColumn').removeClass('expanded-right');
-                });
-
-                $('#collapseFilterSols').click(function () {
-                    $('#filterSolsColumn').toggleClass('collapsed');
-                    $('#contentColumn').toggleClass('expanded-left');
-                });
-
-                $('#expandFilterSols').click(function () {
-                    $('#filterSolsColumn').removeClass('collapsed');
-                    $('#contentColumn').removeClass('expanded-left');
-                });
-            });
-    </script> -->
 </body>
 </html>

@@ -1,7 +1,7 @@
 /* css/filterSols.css */
 
 #filterSolsColumn {
-    transition: all 0.3s ease-out;
+    /* transition: all 0.3s ease-out; */
     display: flex;
     flex-direction: column;
 }
@@ -18,7 +18,8 @@
 #filterSolsColumn.collapsed .expand-filter-sols {
     display: flex;
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    /* height: 100vh; */
 }
 
 .expand-filter-sols {
@@ -46,6 +47,11 @@
     color: white;
 }
 
-#contentColumn {
+.filter-sols-column {
+    flex: 0 0 300px;
     transition: all 0.3s ease-out;
+}
+
+.filter-sols-column.collapsed {
+    flex: 0 0 60px;
 }
