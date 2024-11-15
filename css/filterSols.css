@@ -11,6 +11,16 @@
     flex: 0 0 60px;
 }
 
+#filterSolsColumn.collapsed .card {
+    display: none;
+}
+
+#filterSolsColumn.collapsed .expand-filter-sols {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
 .expand-filter-sols {
     display: none;
     writing-mode: vertical-rl;
@@ -19,15 +29,6 @@
     height: 100%;
     justify-content: center;
     align-items: center;
-}
-
-#filterSolsColumn.collapsed .expand-filter-sols {
-    display: flex;
-    width: 100%;
-}
-
-#filterSolsColumn.collapsed .card {
-    display: none;
 }
 
 .filter-sols-section {
@@ -47,17 +48,4 @@
 
 #contentColumn {
     transition: all 0.3s ease-out;
-}
-
-#contentColumn.expanded-right {
-    margin-left: -25%;
-}
-
-#contentColumn.expanded-left {
-    margin-right: -25%;
-}
-
-#contentColumn.expanded-right.expanded-left {
-    margin-left: 0;
-    margin-right: 0;
 }

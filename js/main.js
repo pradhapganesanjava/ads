@@ -34,23 +34,52 @@ function setupEventListeners() {
 }
 
 function toggleFilterColumn() {
-    document.getElementById('filterColumn').classList.toggle('collapsed');
-    document.getElementById('contentColumn').classList.toggle('expanded-right');
+    const filterColumn = document.getElementById('filterColumn');
+    const contentColumn = document.getElementById('contentColumn');
+    filterColumn.classList.toggle('collapsed');
+    contentColumn.classList.toggle('expanded-right');
+    adjustContentColumnWidth();
 }
 
 function expandFilterColumn() {
-    document.getElementById('filterColumn').classList.remove('collapsed');
-    document.getElementById('contentColumn').classList.remove('expanded-right');
+    const filterColumn = document.getElementById('filterColumn');
+    const contentColumn = document.getElementById('contentColumn');
+    filterColumn.classList.remove('collapsed');
+    contentColumn.classList.remove('expanded-right');
+    adjustContentColumnWidth();
 }
 
 function toggleFilterSolsColumn() {
-    document.getElementById('filterSolsColumn').classList.toggle('collapsed');
-    document.getElementById('contentColumn').classList.toggle('expanded-left');
+    const filterSolsColumn = document.getElementById('filterSolsColumn');
+    const contentColumn = document.getElementById('contentColumn');
+    filterSolsColumn.classList.toggle('collapsed');
+    contentColumn.classList.toggle('expanded-left');
+    adjustContentColumnWidth();
 }
 
 function expandFilterSolsColumn() {
-    document.getElementById('filterSolsColumn').classList.remove('collapsed');
-    document.getElementById('contentColumn').classList.remove('expanded-left');
+    const filterSolsColumn = document.getElementById('filterSolsColumn');
+    const contentColumn = document.getElementById('contentColumn');
+    filterSolsColumn.classList.remove('collapsed');
+    contentColumn.classList.remove('expanded-left');
+    adjustContentColumnWidth();
+}
+
+function adjustContentColumnWidth() {
+    const filterColumn = document.getElementById('filterColumn');
+    const filterSolsColumn = document.getElementById('filterSolsColumn');
+    const contentColumn = document.getElementById('contentColumn');
+
+    if (filterColumn.classList.contains('collapsed') && filterSolsColumn.classList.contains('collapsed')) {
+        contentColumn.classList.add('col-md-12');
+        contentColumn.classList.remove('col-md-6');
+    } else if (filterColumn.classList.contains('collapsed') || filterSolsColumn.classList.contains('collapsed')) {
+        contentColumn.classList.add('col-md-9');
+        contentColumn.classList.remove('col-md-6', 'col-md-12');
+    } else {
+        contentColumn.classList.add('col-md-6');
+        contentColumn.classList.remove('col-md-9', 'col-md-12');
+    }
 }
 
 function setupEventSubscriptions() {
