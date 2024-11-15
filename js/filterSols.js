@@ -80,11 +80,21 @@ export function setGlobalData(data) {
 
 export function setupFilterSolsToggle() {
     const toggleFilterSolsBtn = document.getElementById('toggleFilterSols');
+    const expandFilterSolsBtn = document.getElementById('expandFilterSols');
     const filterSolsColumn = document.getElementById('filterSolsColumn');
+    const contentColumn = document.getElementById('contentColumn');
 
-    if (toggleFilterSolsBtn && filterSolsColumn) {
+    if (toggleFilterSolsBtn && expandFilterSolsBtn && filterSolsColumn && contentColumn) {
         toggleFilterSolsBtn.addEventListener('click', () => {
+            filterSolsColumn.classList.toggle('collapsed');
             filterSolsColumn.classList.toggle('filter-sols-open');
+            contentColumn.classList.toggle('filter-sols-open');
+        });
+
+        expandFilterSolsBtn.addEventListener('click', () => {
+            filterSolsColumn.classList.remove('collapsed');
+            filterSolsColumn.classList.add('filter-sols-open');
+            contentColumn.classList.add('filter-sols-open');
         });
     }
 }

@@ -26,6 +26,31 @@ async function init() {
 function setupEventListeners() {
     document.getElementById('authorize_button').addEventListener('click', handleAuthClick);
     document.getElementById('signout_button').addEventListener('click', handleSignoutClick);
+
+    document.getElementById('collapseFilters').addEventListener('click', toggleFilterColumn);
+    document.getElementById('expandFilters').addEventListener('click', expandFilterColumn);
+    document.getElementById('collapseFilterSols').addEventListener('click', toggleFilterSolsColumn);
+    document.getElementById('expandFilterSols').addEventListener('click', expandFilterSolsColumn);
+}
+
+function toggleFilterColumn() {
+    document.getElementById('filterColumn').classList.toggle('collapsed');
+    document.getElementById('contentColumn').classList.toggle('expanded-right');
+}
+
+function expandFilterColumn() {
+    document.getElementById('filterColumn').classList.remove('collapsed');
+    document.getElementById('contentColumn').classList.remove('expanded-right');
+}
+
+function toggleFilterSolsColumn() {
+    document.getElementById('filterSolsColumn').classList.toggle('collapsed');
+    document.getElementById('contentColumn').classList.toggle('expanded-left');
+}
+
+function expandFilterSolsColumn() {
+    document.getElementById('filterSolsColumn').classList.remove('collapsed');
+    document.getElementById('contentColumn').classList.remove('expanded-left');
 }
 
 function setupEventSubscriptions() {

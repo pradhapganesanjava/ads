@@ -27,9 +27,9 @@
             </div>
         </header>
 
-        <div class="row main-content">
+        <div class="main-content">
             <!-- Left Column - Filter Section -->
-            <div id="filterColumn" class="col-md-3 p-0">
+            <div id="filterColumn">
                 <button class="btn btn-link expand-filters" id="expandFilters">
                     <i class="fas fa-chevron-right"></i> Expand Filters
                 </button>
@@ -51,7 +51,7 @@
             </div>
 
             <!-- Center Column - Table Container -->
-            <div id="contentColumn" class="col-md-6">
+            <div id="contentColumn">
                 <div id="errorContainer" class="alert alert-danger d-none" role="alert"></div>
                 <div id="tableContainer">
                     <table id="sheetDataTable" class="display table table-striped table-bordered" style="width: 100%">
@@ -62,17 +62,17 @@
             </div>
 
             <!-- Right Column - Filter Sols Section -->
-            <div id="filterSolsColumn" class="col-md-3 p-0">
+            <div id="filterSolsColumn">
                 <button class="btn btn-link expand-filter-sols" id="expandFilterSols">
                     <i class="fas fa-chevron-left"></i> Expand Filter Sols
+                </button>
+                <button class="btn btn-link collapse-filter-sols" id="toggleFilterSols">
+                    <i class="fas fa-chevron-right"></i> Collapse Filter Sols
                 </button>
                 <div class="card h-100">
                     <div class="card-header" id="filterSolsHeader">
                         <h5 class="mb-0 d-flex justify-content-between align-items-center">
                             <span>Filter Sols</span>
-                            <button class="btn btn-sm btn-outline-secondary" id="collapseFilterSols">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
                         </h5>
                     </div>
                     <div id="filterSolsCollapse" class="collapse show h-100">
@@ -82,7 +82,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -108,27 +107,24 @@
     <script type="module" src="js/main.js"></script>
 
     <script>
-            $(document).ready(function () {
-                $('#collapseFilters').click(function () {
-                    $('#filterColumn').toggleClass('collapsed');
-                    $('#contentColumn').toggleClass('expanded-right');
+        $(document).ready(function() {
+            $('#collapseFilters').click(function() {
+                $('#filterColumn').toggleClass('collapsed');
+                $('#tableColumn').toggleClass('expanded');
                 });
 
-                $('#expandFilters').click(function () {
-                    $('#filterColumn').removeClass('collapsed');
-                    $('#contentColumn').removeClass('expanded-right');
-                });
-
-                $('#collapseFilterSols').click(function () {
-                    $('#filterSolsColumn').toggleClass('collapsed');
-                    $('#contentColumn').toggleClass('expanded-left');
-                });
-
-                $('#expandFilterSols').click(function () {
-                    $('#filterSolsColumn').removeClass('collapsed');
-                    $('#contentColumn').removeClass('expanded-left');
-                });
+            $('#expandFilters').click(function() {
+                $('#filterColumn').removeClass('collapsed');
+                $('#tableColumn').removeClass('expanded');
             });
+
+            $('#toggleFilterSols').click(function () {
+                $('#filterSolsColumn').toggleClass('filter-sols-open');
+            });
+        });
+        // $(window).on('resize', function () {
+        //     $('#sheetDataTable').DataTable().columns.adjust().draw();
+        // });
     </script>
 </body>
 </html>
