@@ -1,12 +1,12 @@
 // js/filterSols.js
 
 import { renderTable } from './leetTable.js';
-import { applyFilters, getActiveFilters } from './filterUi.js';
 
 let globalData = null;
-let activeFilterSols = [];
+let filteredData = null;
 
-export function renderFilterSols(filteredData) {
+export function renderFilterSols(data) {
+    filteredData = data;
     if (!filteredData || filteredData.length === 0) {
         console.error('Filtered data not set or empty');
         return;
@@ -51,39 +51,18 @@ function toggleFilterSols(event) {
 }
 
 function updateFilterSolsList() {
-    activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
+    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
         tag: button.dataset.tag,
         tagType: button.dataset.tagType
     }));
-    console.log('Active filter sols:', activeFilterSols);
-    applyAllFilters();
-}
-
-function applyAllFilters() {
-    if (globalData) {
-        let filteredData = globalData;
-
-        // Apply main filters
-        const mainFilters = getActiveFilters();
-        if (mainFilters.length > 0) {
-            filteredData = filteredData.filter(row => {
-                return mainFilters.every(filter => {
-                    return Array.isArray(row.tags) && row.tags.some(tag =>
-                        tag.toLowerCase() === filter.name.toLowerCase()
-                    );
-                });
-            });
-        }
-
-        // Apply filter sols
-        if (activeFilterSols.length > 0) {
+    
+    if (filteredData) {
             filteredData = filteredData.filter(item => {
-                return activeFilterSols.some(filter =>
+            if (activeFilterSols.length === 0) return true;
+            return activeFilterSols.every(filter => 
                     (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
                 );
             });
-        }
-
         renderTable(filteredData);
         renderFilterSols(filteredData);
     }
@@ -91,14 +70,16 @@ function applyAllFilters() {
 
 export function setGlobalData(data) {
     globalData = data;
+    filteredData = data;
 }
 
-export function updateFilterSols(filteredData) {
+export function updateFilterSols(data) {
+    filteredData = data;
     renderFilterSols(filteredData);
 }
 
 export function setupFilterSolsToggle() {
-    const toggleFilterSolsBtn = document.getElementById('toggleFilterSols');
+    const toggleFilterSolsBtn = document.getElementById('collapseFilterSols');
     const expandFilterSolsBtn = document.getElementById('expandFilterSols');
     const filterSolsColumn = document.getElementById('filterSolsColumn');
     const contentColumn = document.getElementById('contentColumn');
@@ -106,13 +87,11 @@ export function setupFilterSolsToggle() {
     if (toggleFilterSolsBtn && expandFilterSolsBtn && filterSolsColumn && contentColumn) {
         toggleFilterSolsBtn.addEventListener('click', () => {
             filterSolsColumn.classList.toggle('collapsed');
-            filterSolsColumn.classList.toggle('filter-sols-open');
             contentColumn.classList.toggle('filter-sols-open');
         });
 
         expandFilterSolsBtn.addEventListener('click', () => {
             filterSolsColumn.classList.remove('collapsed');
-            filterSolsColumn.classList.add('filter-sols-open');
             contentColumn.classList.add('filter-sols-open');
         });
     }

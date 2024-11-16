@@ -3,7 +3,6 @@ import { renderTable } from './leetTable.js';
 import { updateFilterSols } from './filterSols.js';
 
 let globalData = null;
-let activeFilters = [];
 
 export function renderFilters(filterDataJson) {
     if (!filterDataJson || filterDataJson.length === 0) {
@@ -54,15 +53,12 @@ function toggleFilter(event) {
 }
 
 function updateFilterList() {
-    activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
+    const activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
         category: button.dataset.category,
         key: button.dataset.key,
         name: button.dataset.name
     }));
     console.log('Active filters:', activeFilters);
-    applyFilters();
-}
-export function applyFilters() {
     if (globalData) {
         const filteredData = applyFilter(globalData, activeFilters);
         renderTable(filteredData);
@@ -89,8 +85,4 @@ function applyFilter(globalData, activeFilters) {
 
 export function setGlobalData(data) {
     globalData = data;
-}
-
-export function getActiveFilters() {
-    return activeFilters;
 }
