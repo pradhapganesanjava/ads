@@ -5,9 +5,9 @@ import { renderTable } from './leetTable.js';
 let globalData = null;
 let filteredData = null;
 
-export function renderFilterSols(filterData, activeFilters = []) {
-    if (!globalData || !filterData || filterData.length < 2) {
-        console.error('Invalid data');
+export function renderFilterSols(activeFilters = []) {
+    if (!globalData) {
+        console.error('Global data not set');
         return;
     }
 
@@ -17,25 +17,44 @@ export function renderFilterSols(filterData, activeFilters = []) {
         return activeFilters.every(filter => item[filter.key] === '1' || item[filter.key] === 'true' || item[filter.key] === 'yes');
     });
 
+    // Get unique IDs from filteredData
+    const uniqueIds = [...new Set(filteredData.map(item => item.id))];
+
+    // Fetch globalData records matching these IDs
+    const relevantData = globalData.filter(item => uniqueIds.includes(item.id));
+
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
-    // Get unique names from filteredData
-    const uniqueNames = [...new Set(filteredData.map(item => item.title))];
+    // Render tags section
+    renderTagSection(relevantData, filterSolsSection, 'Tags', item => item.tags ? item.tags.split(',') : []);
 
-    const itemsDiv = document.createElement('div');
-    itemsDiv.className = 'd-flex flex-wrap';
+    // Render relation_tags section
+    renderTagSection(relevantData, filterSolsSection, 'Relation Tags', item => item.relation_tags ? item.relation_tags.split(',') : []);
+}
 
-    uniqueNames.forEach(name => {
+function renderTagSection(data, container, title, getTagsFunc) {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'filter-sols-section mb-3';
+    sectionDiv.innerHTML = `<h5>${title}</h5>`;
+
+    const tagsDiv = document.createElement('div');
+    tagsDiv.className = 'd-flex flex-wrap';
+
+    const allTags = data.flatMap(getTagsFunc);
+    const uniqueTags = [...new Set(allTags)];
+
+    uniqueTags.forEach(tag => {
         const button = document.createElement('button');
         button.className = 'btn btn-outline-primary btn-sm m-1 filter-sols-item';
-        button.textContent = name;
-        button.dataset.name = name;
+        button.textContent = tag.trim();
+        button.dataset.tag = tag.trim();
         button.onclick = toggleFilterSols;
-        itemsDiv.appendChild(button);
+        tagsDiv.appendChild(button);
     });
 
-    filterSolsSection.appendChild(itemsDiv);
+    sectionDiv.appendChild(tagsDiv);
+    container.appendChild(sectionDiv);
 }
 
 function toggleFilterSols(event) {
@@ -45,10 +64,13 @@ function toggleFilterSols(event) {
 }
 
 function updateFilterSolsList() {
-    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => button.dataset.name);
+    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => button.dataset.tag);
     console.log('Active filter sols:', activeFilterSols);
     if (globalData) {
-        const filteredData = globalData.filter(item => activeFilterSols.length === 0 || activeFilterSols.includes(item.title));
+        const filteredData = globalData.filter(item => {
+            const itemTags = (item.tags ? item.tags.split(',') : []).concat(item.relation_tags ? item.relation_tags.split(',') : []);
+            return activeFilterSols.length === 0 || activeFilterSols.some(tag => itemTags.includes(tag.trim()));
+        });
         renderTable(filteredData);
     }
 }

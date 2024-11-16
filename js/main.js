@@ -88,7 +88,7 @@ async function loadAndRenderData() {
         setFilterSolsGlobalData(mainData);
         renderTable(mainData);
         renderFilters(filterData);
-        renderFilterSols(filterData);
+        renderFilterSols();
         eventBus.publish('showTable');
     } catch (error) {
         handleError(error);
