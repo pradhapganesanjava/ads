@@ -107,6 +107,7 @@ export function updateFilterSols(data) {
 
     if (!data || data.length === 0) {
         console.warn('No data to update filter sols');
+        clearActiveFilterSols();
         return;
     }
     filteredData = data;
@@ -116,6 +117,7 @@ export function updateFilterSols(data) {
 
 export function clearActiveFilterSols() {
     activeFilterSols = [];
+    filterSolsSection.innerHTML = '';
 }
 
 export function setupFilterSolsToggle() {
