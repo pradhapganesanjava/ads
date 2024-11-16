@@ -64,7 +64,7 @@ function updateFilterSolsList() {
                 );
             });
         renderTable(filteredData);
-        renderFilterSols(filteredData);
+        // renderFilterSols(filteredData);
     }
 }
 
@@ -79,7 +79,7 @@ export function updateFilterSols(data) {
 }
 
 export function setupFilterSolsToggle() {
-    const toggleFilterSolsBtn = document.getElementById('collapseFilterSols');
+    const toggleFilterSolsBtn = document.getElementById('toggleFilterSols');
     const expandFilterSolsBtn = document.getElementById('expandFilterSols');
     const filterSolsColumn = document.getElementById('filterSolsColumn');
     const contentColumn = document.getElementById('contentColumn');
@@ -87,11 +87,13 @@ export function setupFilterSolsToggle() {
     if (toggleFilterSolsBtn && expandFilterSolsBtn && filterSolsColumn && contentColumn) {
         toggleFilterSolsBtn.addEventListener('click', () => {
             filterSolsColumn.classList.toggle('collapsed');
+            filterSolsColumn.classList.toggle('filter-sols-open');
             contentColumn.classList.toggle('filter-sols-open');
         });
 
         expandFilterSolsBtn.addEventListener('click', () => {
             filterSolsColumn.classList.remove('collapsed');
+            filterSolsColumn.classList.add('filter-sols-open');
             contentColumn.classList.add('filter-sols-open');
         });
     }

@@ -50,7 +50,7 @@ th {
     background-color: #f2f2f2;
 }
 
-#sheetDataTable.table th,
+/* #sheetDataTable.table th, */
 #sheetDataTable.table td {
     padding: 1px !important;
 }
@@ -148,8 +148,9 @@ th {
     width: 100% !important;
 }
 
+.filter-sols-item:hover,  
 .filter-item:hover {
-    background-color: #e6f2ff;
+    background-color: #d3e6fb;
     color: #007bff;
     border-color: #007bff;
 }
