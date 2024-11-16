@@ -96,6 +96,10 @@ export function updateFilterSols(data) {
     renderFilterSols(filteredData);
 }
 
+export function clearActiveFilterSols() {
+    activeFilterSols = [];
+}
+
 export function setupFilterSolsToggle() {
     const toggleFilterSolsBtn = document.getElementById('toggleFilterSols');
     const expandFilterSolsBtn = document.getElementById('expandFilterSols');
