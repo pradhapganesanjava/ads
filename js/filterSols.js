@@ -4,19 +4,21 @@ import { renderTable } from './leetTable.js';
 
 let globalData = null;
 let filteredData = null;
+let activeFilterSols = [];
 
 export function renderFilterSols(data) {
+    // if (!data) return;
+
     filteredData = data;
-    if (!filteredData || filteredData.length === 0) {
-        console.error('Filtered data not set or empty');
-        return;
-    }
 
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
     renderTagSection(filteredData, filterSolsSection, 'Tags', 'tags');
     renderTagSection(filteredData, filterSolsSection, 'Relation Tags', 'relation_tag');
+
+    // Reapply active state to buttons
+    reapplyActiveState();
 }
 
 function renderTagSection(data, container, title, tagType) {
@@ -47,24 +49,35 @@ function renderTagSection(data, container, title, tagType) {
 function toggleFilterSols(event) {
     const button = event.target;
     button.classList.toggle('active');
-    updateFilterSolsList();
+    updateActiveFilterSols();
+    applyFilters();
 }
 
-function updateFilterSolsList() {
-    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
+function updateActiveFilterSols() {
+    activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
         tag: button.dataset.tag,
         tagType: button.dataset.tagType
     }));
-    
-    if (filteredData) {
-            filteredData = filteredData.filter(item => {
+}
+
+function reapplyActiveState() {
+    activeFilterSols.forEach(filter => {
+        const button = document.querySelector(`.filter-sols-item[data-tag="${filter.tag}"][data-tag-type="${filter.tagType}"]`);
+        if (button) {
+            button.classList.add('active');
+        }
+    });
+}
+
+function applyFilters() {
+    if (globalData) {
+        filteredData = globalData.filter(item => {
             if (activeFilterSols.length === 0) return true;
             return activeFilterSols.every(filter => 
                     (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
                 );
             });
         renderTable(filteredData);
-        // renderFilterSols(filteredData);
     }
 }
 
