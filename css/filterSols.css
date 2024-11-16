@@ -4,6 +4,7 @@
     /* transition: all 0.3s ease-out; */
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 #filterSolsColumn.collapsed {
@@ -23,8 +24,18 @@
 }
 
 #filterSolsCollapse {
-    overflow: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
+#filterSolsColumn .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .expand-filter-sols {
     display: none;
     writing-mode: vertical-rl;
