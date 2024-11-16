@@ -78,6 +78,7 @@ function applyFilters() {
                 );
             });
         renderTable(filteredData);
+        renderFilterSols(filteredData);
     }
 }
 
