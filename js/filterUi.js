@@ -72,10 +72,17 @@ function applyFilter(globalData, activeFilters) {
     }
 
     return globalData.filter(row => {
-        return activeFilters.some(filter => {
+        return activeFilters.every(filter => {
             const cellValue = row[filter.key];
-            const isTagMatch = Array.isArray(row.tags) && row.tags.some(tag => tag.toLowerCase() === filter.name.toLowerCase());
-            return cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes' || isTagMatch;
+
+            // Check if the filter is for tags
+            if (filter.key === 'tags') {
+                return Array.isArray(row.tags) && row.tags.some(tag =>
+                    tag.toLowerCase() === filter.name.toLowerCase()
+                );
+            }
+            
+            return false;
         });
     });
 }

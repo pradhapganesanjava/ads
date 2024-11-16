@@ -49,6 +49,11 @@ td {
 th {
     background-color: #f2f2f2;
 }
+
+#sheetDataTable.table td {
+    padding: 1px !important;
+}
+
 .dataTables_wrapper .dataTables_scroll {
     clear: both;
 }
@@ -140,4 +145,9 @@ th {
 .dataTables_scrollHeadInner,
 .dataTables_scrollHeadInner table {
     width: 100% !important;
+}
+
+.filter-item:hover {
+    background-color: #e6f2ff;
+    border-color: #007bff;
 }
