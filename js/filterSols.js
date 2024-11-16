@@ -110,7 +110,7 @@ export function updateFilterSols(data) {
         return;
     }
     filteredData = data;
-    clearActiveFilterSols();
+    // clearActiveFilterSols();
     renderFilterSols(filteredData);
 }
 
