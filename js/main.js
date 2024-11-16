@@ -83,11 +83,11 @@ function handleSignoutClick() {
 async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
-        const { mainData, filterData } = await fetchSheetData();
-        setGlobalData(mainData);
-        setFilterSolsGlobalData(mainData);
-        renderTable(mainData);
-        renderFilters(filterData);
+        const { mainData, filterData, mainDataJson, filterDataJson } = await fetchSheetData();
+        setGlobalData(mainDataJson);
+        setFilterSolsGlobalData(mainDataJson);
+        renderTable(mainDataJson);
+        renderFilters(filterDataJson);
         renderFilterSols();
         eventBus.publish('showTable');
     } catch (error) {

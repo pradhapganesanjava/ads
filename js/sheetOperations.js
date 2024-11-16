@@ -22,9 +22,33 @@ export async function fetchSheetData() {
             throw new Error('No main data found.');
         }
 
+        // Convert mainData to JSON
+        const mainHeaders = mainData[0];
+        const mainDataJson = mainData.slice(1).map(row => {
+            return mainHeaders.reduce((obj, header, index) => {
+                if (header === 'tags' || header === 'relation_tag') {
+                    obj[header] = row[index] ? row[index].split('^').map(item => item.trim()) : [];
+                } else {
+                obj[header] = row[index];
+                }
+                return obj;
+            }, {});
+        });
+
+        // Convert filterData to JSON
+        const filterHeaders = filterData[0];
+        const filterDataJson = filterData.slice(1).map(row => {
+            return filterHeaders.reduce((obj, header, index) => {
+                obj[header] = row[index];
+                return obj;
+            }, {});
+        });
+
         return {
             mainData,
-            filterData: filterData || []
+            filterData: filterData || [],
+            mainDataJson,
+            filterDataJson
         };
     } catch (err) {
         console.error('Error fetching sheet data:', err);

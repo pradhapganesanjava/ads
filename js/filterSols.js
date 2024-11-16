@@ -3,37 +3,24 @@
 import { renderTable } from './leetTable.js';
 
 let globalData = null;
-let filteredData = null;
 
-export function renderFilterSols(activeFilters = []) {
-    if (!globalData) {
-        console.error('Global data not set');
+export function renderFilterSols(filteredData) {
+    if (!filteredData || filteredData.length === 0) {
+        console.error('Filtered data not set or empty');
         return;
     }
-
-    // Filter globalData based on activeFilters from filterUi
-    filteredData = globalData.filter(item => {
-        if (activeFilters.length === 0) return true;
-        return activeFilters.every(filter => item[filter.key] === '1' || item[filter.key] === 'true' || item[filter.key] === 'yes');
-    });
-
-    // Get unique IDs from filteredData
-    const uniqueIds = [...new Set(filteredData.map(item => item.id))];
-
-    // Fetch globalData records matching these IDs
-    const relevantData = globalData.filter(item => uniqueIds.includes(item.id));
 
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
     // Render tags section
-    renderTagSection(relevantData, filterSolsSection, 'Tags', item => item.tags ? item.tags.split(',') : []);
+    renderTagSection(filteredData, filterSolsSection, 'Tags', 'tags');
 
     // Render relation_tags section
-    renderTagSection(relevantData, filterSolsSection, 'Relation Tags', item => item.relation_tags ? item.relation_tags.split(',') : []);
+    renderTagSection(filteredData, filterSolsSection, 'Relation Tags', 'relation_tag');
 }
 
-function renderTagSection(data, container, title, getTagsFunc) {
+function renderTagSection(data, container, title, tagType) {
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'filter-sols-section mb-3';
     sectionDiv.innerHTML = `<h5>${title}</h5>`;
@@ -41,7 +28,7 @@ function renderTagSection(data, container, title, getTagsFunc) {
     const tagsDiv = document.createElement('div');
     tagsDiv.className = 'd-flex flex-wrap';
 
-    const allTags = data.flatMap(getTagsFunc);
+    const allTags = data.flatMap(item => item[tagType] || []);
     const uniqueTags = [...new Set(allTags)];
 
     uniqueTags.forEach(tag => {
@@ -49,6 +36,7 @@ function renderTagSection(data, container, title, getTagsFunc) {
         button.className = 'btn btn-outline-primary btn-sm m-1 filter-sols-item';
         button.textContent = tag.trim();
         button.dataset.tag = tag.trim();
+        button.dataset.tagType = tagType;
         button.onclick = toggleFilterSols;
         tagsDiv.appendChild(button);
     });
@@ -64,12 +52,17 @@ function toggleFilterSols(event) {
 }
 
 function updateFilterSolsList() {
-    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => button.dataset.tag);
+    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
+        tag: button.dataset.tag,
+        tagType: button.dataset.tagType
+    }));
     console.log('Active filter sols:', activeFilterSols);
     if (globalData) {
         const filteredData = globalData.filter(item => {
-            const itemTags = (item.tags ? item.tags.split(',') : []).concat(item.relation_tags ? item.relation_tags.split(',') : []);
-            return activeFilterSols.length === 0 || activeFilterSols.some(tag => itemTags.includes(tag.trim()));
+            if (activeFilterSols.length === 0) return true;
+            return activeFilterSols.some(filter => 
+                (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
+            );
         });
         renderTable(filteredData);
     }
@@ -79,8 +72,8 @@ export function setGlobalData(data) {
     globalData = data;
 }
 
-export function updateFilterSols(activeFilters) {
-    renderFilterSols(globalData, activeFilters);
+export function updateFilterSols(filteredData) {
+    renderFilterSols(filteredData);
 }
 
 export function setupFilterSolsToggle() {

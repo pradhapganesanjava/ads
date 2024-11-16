@@ -4,31 +4,19 @@ import { updateFilterSols } from './filterSols.js';
 
 let globalData = null;
 
-export function renderFilters(filterData) {
-    if (!filterData || filterData.length < 2) {
+export function renderFilters(filterDataJson) {
+    if (!filterDataJson || filterDataJson.length === 0) {
         console.error('Invalid filter data');
         return;
     }
 
-    const [headers, ...data] = filterData;
-    const categoryIndex = headers.indexOf('CATEGORY');
-    const nameIndex = headers.indexOf('NAME');
-    const keyIndex = headers.indexOf('KEY');
-
-    if (categoryIndex === -1 || nameIndex === -1 || keyIndex === -1) {
-        console.error('Required columns not found in filter data');
-        return;
-    }
-
     const categories = {};
-    data.forEach(row => {
-        const category = row[categoryIndex];
-        const name = row[nameIndex];
-        const key = row[keyIndex];
+    filterDataJson.forEach(item => {
+        const category = item.CATEGORY;
         if (!categories[category]) {
             categories[category] = [];
         }
-        categories[category].push({ name, key });
+        categories[category].push({ name: item.NAME, key: item.KEY });
     });
 
     const filterSection = document.querySelector('.filter-section');
@@ -72,9 +60,49 @@ function updateFilterList() {
     }));
     console.log('Active filters:', activeFilters);
     if (globalData) {
-        renderTable(globalData, activeFilters);
-        updateFilterSols(activeFilters);  // Add this line
+        const filteredData = applyFilter(globalData, activeFilters);
+        renderTable(filteredData);
+        updateFilterSols(filteredData);
     }
+}
+
+function applyFilter(globalData, activeFilters) {
+    if (!activeFilters || activeFilters.length === 0) {
+        return globalData;
+    }
+
+    return globalData.filter(row => {
+        return activeFilters.some(filter => {
+            const cellValue = row[filter.key];
+            const isTagMatch = Array.isArray(row.tags) && row.tags.some(tag => tag.toLowerCase() === filter.name.toLowerCase());
+            return cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes' || isTagMatch;
+        });
+    });
+}
+
+function applyFilterByName(data, activeFilters) {
+    // Filter the data based on activeFilters
+    const filteredData = data.slice(1).filter((row, rowIndex) => {
+        if (activeFilters.length === 0) return true;
+        return activeFilters.every(filter => {
+            const columnIndex = headers.indexOf(filter.key);
+            console.log(`Row ${rowIndex + 1}, Filter: ${filter.key}, Column Index: ${columnIndex}`);
+            if (columnIndex !== -1) {
+                const cellValue = row[columnIndex];
+                console.log(`Cell Value: ${cellValue}, Type: ${typeof cellValue}`);
+                // Less strict comparison
+                return cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes';
+            }
+            // If the filter key is not a column name, check if it's a value in any of the columns
+            const matchingColumn = headers.findIndex((header, index) => {
+                const cellValue = row[index];
+                return (cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes') && header === filter.key;
+            });
+            console.log(`Matching Column for ${filter.key}: ${matchingColumn}`);
+            return matchingColumn !== -1;
+        });
+    });
+    return filteredData;
 }
 
 export function setGlobalData(data) {
