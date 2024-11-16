@@ -3,6 +3,7 @@ import { renderTable } from './leetTable.js';
 import { updateFilterSols } from './filterSols.js';
 
 let globalData = null;
+let allCategories = null;
 
 export function renderFilters(filterDataJson) {
     if (!filterDataJson || filterDataJson.length === 0) {
@@ -10,57 +11,38 @@ export function renderFilters(filterDataJson) {
         return;
     }
 
-    const categories = {};
+    allCategories = {};
     filterDataJson.forEach(item => {
         const category = item.CATEGORY;
-        if (!categories[category]) {
-            categories[category] = [];
+        if (!allCategories[category]) {
+            allCategories[category] = [];
         }
-        categories[category].push({ name: item.NAME, key: item.KEY });
+        allCategories[category].push({ name: item.NAME, key: item.KEY, active: false });
     });
 
-    updateFilterList(categories);
+    updateFilterList();
 }
 
 function toggleFilter(event) {
     const button = event.target;
-    button.classList.toggle('active');
+    const category = button.dataset.category;
+    const name = button.dataset.name;
+    
+    allCategories[category].forEach(item => {
+        if (item.name === name) {
+            item.active = !item.active;
+        }
+    });
+    
     updateFilterList();
 }
 
-function updateFilterList(categories = null) {
-    const activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
-        category: button.dataset.category,
-        key: button.dataset.key,
-        name: button.dataset.name
-    }));
-
-    // Sort active filters alphabetically
-    activeFilters.sort((a, b) => a.name.localeCompare(b.name));
-
-    console.log('Active filters:', activeFilters);
-
+function updateFilterList() {
     const filterSection = document.querySelector('.filter-section');
     filterSection.innerHTML = ''; // Clear existing content
 
-    // If categories are not provided, extract them from existing buttons
-    if (!categories) {
-        categories = {};
-        document.querySelectorAll('.filter-item').forEach(button => {
-            const category = button.dataset.category;
-            if (!categories[category]) {
-                categories[category] = [];
-            }
-            categories[category].push({
-                name: button.dataset.name,
-                key: button.dataset.key,
-                active: button.classList.contains('active')
-            });
-        });
-    }
-
     // Render categories and items
-    Object.entries(categories).forEach(([category, items]) => {
+    Object.entries(allCategories).forEach(([category, items]) => {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'filter-category mb-3';
         categoryDiv.innerHTML = `<h5>${category}</h5>`;
@@ -92,6 +74,7 @@ function updateFilterList(categories = null) {
     });
 
     if (globalData) {
+        const activeFilters = Object.values(allCategories).flat().filter(item => item.active);
         const filteredData = applyFilter(globalData, activeFilters);
         renderTable(filteredData);
         updateFilterSols(filteredData);
