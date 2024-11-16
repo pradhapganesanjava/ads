@@ -3,6 +3,7 @@ import { renderTable } from './leetTable.js';
 import { updateFilterSols } from './filterSols.js';
 
 let globalData = null;
+let activeFilters = [];
 
 export function renderFilters(filterDataJson) {
     if (!filterDataJson || filterDataJson.length === 0) {
@@ -53,12 +54,15 @@ function toggleFilter(event) {
 }
 
 function updateFilterList() {
-    const activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
+    activeFilters = Array.from(document.querySelectorAll('.filter-item.active')).map(button => ({
         category: button.dataset.category,
         key: button.dataset.key,
         name: button.dataset.name
     }));
     console.log('Active filters:', activeFilters);
+    applyFilters();
+}
+export function applyFilters() {
     if (globalData) {
         const filteredData = applyFilter(globalData, activeFilters);
         renderTable(filteredData);
@@ -83,31 +87,10 @@ function applyFilter(globalData, activeFilters) {
     });
 }
 
-function applyFilterByName(data, activeFilters) {
-    // Filter the data based on activeFilters
-    const filteredData = data.slice(1).filter((row, rowIndex) => {
-        if (activeFilters.length === 0) return true;
-        return activeFilters.every(filter => {
-            const columnIndex = headers.indexOf(filter.key);
-            console.log(`Row ${rowIndex + 1}, Filter: ${filter.key}, Column Index: ${columnIndex}`);
-            if (columnIndex !== -1) {
-                const cellValue = row[columnIndex];
-                console.log(`Cell Value: ${cellValue}, Type: ${typeof cellValue}`);
-                // Less strict comparison
-                return cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes';
-            }
-            // If the filter key is not a column name, check if it's a value in any of the columns
-            const matchingColumn = headers.findIndex((header, index) => {
-                const cellValue = row[index];
-                return (cellValue == 1 || cellValue === '1' || cellValue === 'true' || cellValue === 'yes') && header === filter.key;
-            });
-            console.log(`Matching Column for ${filter.key}: ${matchingColumn}`);
-            return matchingColumn !== -1;
-        });
-    });
-    return filteredData;
-}
-
 export function setGlobalData(data) {
     globalData = data;
+}
+
+export function getActiveFilters() {
+    return activeFilters;
 }

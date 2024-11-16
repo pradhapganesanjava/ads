@@ -1,8 +1,10 @@
 // js/filterSols.js
 
 import { renderTable } from './leetTable.js';
+import { applyFilters, getActiveFilters } from './filterUi.js';
 
 let globalData = null;
+let activeFilterSols = [];
 
 export function renderFilterSols(filteredData) {
     if (!filteredData || filteredData.length === 0) {
@@ -13,10 +15,7 @@ export function renderFilterSols(filteredData) {
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
-    // Render tags section
     renderTagSection(filteredData, filterSolsSection, 'Tags', 'tags');
-
-    // Render relation_tags section
     renderTagSection(filteredData, filterSolsSection, 'Relation Tags', 'relation_tag');
 }
 
@@ -52,19 +51,41 @@ function toggleFilterSols(event) {
 }
 
 function updateFilterSolsList() {
-    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
+    activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
         tag: button.dataset.tag,
         tagType: button.dataset.tagType
     }));
     console.log('Active filter sols:', activeFilterSols);
+    applyAllFilters();
+}
+
+function applyAllFilters() {
     if (globalData) {
-        const filteredData = globalData.filter(item => {
-            if (activeFilterSols.length === 0) return true;
-            return activeFilterSols.some(filter => 
-                (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
-            );
-        });
+        let filteredData = globalData;
+
+        // Apply main filters
+        const mainFilters = getActiveFilters();
+        if (mainFilters.length > 0) {
+            filteredData = filteredData.filter(row => {
+                return mainFilters.every(filter => {
+                    return Array.isArray(row.tags) && row.tags.some(tag =>
+                        tag.toLowerCase() === filter.name.toLowerCase()
+                    );
+                });
+            });
+        }
+
+        // Apply filter sols
+        if (activeFilterSols.length > 0) {
+            filteredData = filteredData.filter(item => {
+                return activeFilterSols.some(filter =>
+                    (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
+                );
+            });
+        }
+
         renderTable(filteredData);
+        renderFilterSols(filteredData);
     }
 }
 
