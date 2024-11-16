@@ -30,6 +30,7 @@ header {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: 100% !important;
 }
 
 /* Table styles */
@@ -41,7 +42,7 @@ table {
 th,
 td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 1px;
     text-align: left;
 }
 
@@ -63,7 +64,7 @@ th {
     display: flex;
     flex-direction: column; */
     flex: 1;
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 .dataTables_scrollBody {
@@ -106,9 +107,9 @@ th {
     height: 100%;
     width: 100%;
 }
-#sheetDataTable tbody tr {
+/* #sheetDataTable tbody tr {
     line-height: 0.3;
-}
+} */
 
 /* Responsive styles */
 @media (max-width: 575.98px) {

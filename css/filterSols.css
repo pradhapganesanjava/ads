@@ -22,6 +22,9 @@
     /* height: 100vh; */
 }
 
+#filterSolsCollapse {
+    overflow: auto;
+}
 .expand-filter-sols {
     display: none;
     writing-mode: vertical-rl;
