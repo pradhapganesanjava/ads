@@ -3,59 +3,39 @@
 import { renderTable } from './leetTable.js';
 
 let globalData = null;
+let filteredData = null;
 
-export function renderFilterSols(filterData) {
-    if (!filterData || filterData.length < 2) {
-        console.error('Invalid filter data');
+export function renderFilterSols(filterData, activeFilters = []) {
+    if (!globalData || !filterData || filterData.length < 2) {
+        console.error('Invalid data');
         return;
     }
 
-    const [headers, ...data] = filterData;
-    const categoryIndex = headers.indexOf('CATEGORY');
-    const nameIndex = headers.indexOf('NAME');
-    const keyIndex = headers.indexOf('KEY');
-
-    if (categoryIndex === -1 || nameIndex === -1 || keyIndex === -1) {
-        console.error('Required columns not found in filter data');
-        return;
-    }
-
-    const categories = {};
-    data.forEach(row => {
-        const category = row[categoryIndex];
-        const name = row[nameIndex];
-        const key = row[keyIndex];
-        if (!categories[category]) {
-            categories[category] = [];
-        }
-        categories[category].push({ name, key });
+    // Filter globalData based on activeFilters from filterUi
+    filteredData = globalData.filter(item => {
+        if (activeFilters.length === 0) return true;
+        return activeFilters.every(filter => item[filter.key] === '1' || item[filter.key] === 'true' || item[filter.key] === 'yes');
     });
 
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
-    Object.entries(categories).forEach(([category, items]) => {
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'filter-category mb-3';
-        categoryDiv.innerHTML = `<h5>${category}</h5>`;
+    // Get unique names from filteredData
+    const uniqueNames = [...new Set(filteredData.map(item => item.title))];
 
-        const itemsDiv = document.createElement('div');
-        itemsDiv.className = 'd-flex flex-wrap';
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'd-flex flex-wrap';
 
-        items.forEach(({ name, key }) => {
-            const button = document.createElement('button');
-            button.className = 'btn btn-outline-primary btn-sm m-1 filter-sols-item';
-            button.textContent = name;
-            button.dataset.category = category;
-            button.dataset.key = key;
-            button.dataset.name = name;
-            button.onclick = toggleFilterSols;
-            itemsDiv.appendChild(button);
-        });
-
-        categoryDiv.appendChild(itemsDiv);
-        filterSolsSection.appendChild(categoryDiv);
+    uniqueNames.forEach(name => {
+        const button = document.createElement('button');
+        button.className = 'btn btn-outline-primary btn-sm m-1 filter-sols-item';
+        button.textContent = name;
+        button.dataset.name = name;
+        button.onclick = toggleFilterSols;
+        itemsDiv.appendChild(button);
     });
+
+    filterSolsSection.appendChild(itemsDiv);
 }
 
 function toggleFilterSols(event) {
@@ -65,19 +45,20 @@ function toggleFilterSols(event) {
 }
 
 function updateFilterSolsList() {
-    const activeFilters = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => ({
-        category: button.dataset.category,
-        key: button.dataset.key,
-        name: button.dataset.name
-    }));
-    console.log('Active filters:', activeFilters);
+    const activeFilterSols = Array.from(document.querySelectorAll('.filter-sols-item.active')).map(button => button.dataset.name);
+    console.log('Active filter sols:', activeFilterSols);
     if (globalData) {
-        renderTable(globalData, activeFilters);
+        const filteredData = globalData.filter(item => activeFilterSols.length === 0 || activeFilterSols.includes(item.title));
+        renderTable(filteredData);
     }
 }
 
 export function setGlobalData(data) {
     globalData = data;
+}
+
+export function updateFilterSols(activeFilters) {
+    renderFilterSols(globalData, activeFilters);
 }
 
 export function setupFilterSolsToggle() {

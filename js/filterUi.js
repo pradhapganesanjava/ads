@@ -1,5 +1,6 @@
 // js/filterUi.js
 import { renderTable } from './leetTable.js';
+import { updateFilterSols } from './filterSols.js';
 
 let globalData = null;
 
@@ -72,6 +73,7 @@ function updateFilterList() {
     console.log('Active filters:', activeFilters);
     if (globalData) {
         renderTable(globalData, activeFilters);
+        updateFilterSols(activeFilters);  // Add this line
     }
 }
 
