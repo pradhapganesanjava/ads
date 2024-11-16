@@ -8,7 +8,7 @@ import { handleAuth, handleSignout } from './auth.js';
 import { fetchSheetData } from './sheetOperations.js';
 import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
-import { renderFilterSols, setGlobalData as setFilterSolsGlobalData, setupFilterSolsToggle } from './filterSols.js';
+import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 
 async function init() {
@@ -85,7 +85,6 @@ async function loadAndRenderData() {
         updateState({ isLoading: true });
         const { mainData, filterData, mainDataJson, filterDataJson } = await fetchSheetData();
         setGlobalData(mainDataJson);
-        setFilterSolsGlobalData(mainDataJson);
         renderTable(mainDataJson);
         renderFilters(filterDataJson);
         renderFilterSols();

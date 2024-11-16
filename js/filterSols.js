@@ -2,7 +2,7 @@
 
 import { renderTable } from './leetTable.js';
 
-let globalData = null;
+// let globalData = null;
 let filteredData = null;
 let activeFilterSols = [];
 
@@ -86,8 +86,8 @@ function updateActiveFilterSols() {
 }
 
 function applyFilters() {
-    if (globalData) {
-        filteredData = globalData.filter(item => {
+    if (filteredData) {
+        filteredData = filteredData.filter(item => {
             if (activeFilterSols.length === 0) return true;
             return activeFilterSols.every(filter => 
                     (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
@@ -99,7 +99,7 @@ function applyFilters() {
 }
 
 export function setGlobalData(data) {
-    globalData = data;
+    // globalData = data;
     filteredData = data;
 }
 
