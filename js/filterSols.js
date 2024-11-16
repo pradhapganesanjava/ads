@@ -7,18 +7,16 @@ let filteredData = null;
 let activeFilterSols = [];
 
 export function renderFilterSols(data) {
-    // if (!data) return;
-
     filteredData = data;
 
     const filterSolsSection = document.querySelector('.filter-sols-section');
     filterSolsSection.innerHTML = ''; // Clear existing content
 
+    // Sort activeFilterSols
+    activeFilterSols.sort((a, b) => a.tag.localeCompare(b.tag));
+
     renderTagSection(filteredData, filterSolsSection, 'Tags', 'tags');
     renderTagSection(filteredData, filterSolsSection, 'Relation Tags', 'relation_tag');
-
-    // Reapply active state to buttons
-    reapplyActiveState();
 }
 
 function renderTagSection(data, container, title, tagType) {
@@ -32,13 +30,26 @@ function renderTagSection(data, container, title, tagType) {
     const allTags = data.flatMap(item => item[tagType] || []);
     const uniqueTags = [...new Set(allTags)];
 
-    uniqueTags.forEach(tag => {
+    // Sort tags: active first, then alphabetically
+    const sortedTags = uniqueTags.sort((a, b) => {
+        const aActive = activeFilterSols.some(filter => filter.tag === a && filter.tagType === tagType);
+        const bActive = activeFilterSols.some(filter => filter.tag === b && filter.tagType === tagType);
+        if (aActive === bActive) {
+            return a.localeCompare(b);
+        }
+        return aActive ? -1 : 1;
+    });
+
+    sortedTags.forEach(tag => {
         const button = document.createElement('button');
         button.className = 'btn btn-outline-primary btn-sm m-1 filter-sols-item';
         button.textContent = tag.trim();
         button.dataset.tag = tag.trim();
         button.dataset.tagType = tagType;
         button.onclick = toggleFilterSols;
+        if (activeFilterSols.some(filter => filter.tag === tag && filter.tagType === tagType)) {
+            button.classList.add('active');
+        }
         tagsDiv.appendChild(button);
     });
 
@@ -58,15 +69,8 @@ function updateActiveFilterSols() {
         tag: button.dataset.tag,
         tagType: button.dataset.tagType
     }));
-}
-
-function reapplyActiveState() {
-    activeFilterSols.forEach(filter => {
-        const button = document.querySelector(`.filter-sols-item[data-tag="${filter.tag}"][data-tag-type="${filter.tagType}"]`);
-        if (button) {
-            button.classList.add('active');
-        }
-    });
+    // Sort activeFilterSols
+    activeFilterSols.sort((a, b) => a.tag.localeCompare(b.tag));
 }
 
 function applyFilters() {
