@@ -7,6 +7,12 @@ let filteredData = null;
 let activeFilterSols = [];
 
 export function renderFilterSols(data) {
+
+    if (!data || data.length === 0) {
+        console.warn('No data to render filter sols');
+        return;
+    }
+
     filteredData = data;
 
     const filterSolsSection = document.querySelector('.filter-sols-section');
@@ -20,6 +26,12 @@ export function renderFilterSols(data) {
 }
 
 function renderTagSection(data, container, title, tagType) {
+
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        console.warn(`No data to render for ${title}`);
+        return;
+    }
+
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'filter-sols-section mb-3';
     sectionDiv.innerHTML = `<h5>${title}</h5>`;
@@ -92,7 +104,13 @@ export function setGlobalData(data) {
 }
 
 export function updateFilterSols(data) {
+
+    if (!data || data.length === 0) {
+        console.warn('No data to update filter sols');
+        return;
+    }
     filteredData = data;
+    clearActiveFilterSols();
     renderFilterSols(filteredData);
 }
 
