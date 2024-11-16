@@ -73,16 +73,12 @@ function applyFilter(globalData, activeFilters) {
 
     return globalData.filter(row => {
         return activeFilters.every(filter => {
-            const cellValue = row[filter.key];
 
             // Check if the filter is for tags
-            if (filter.key === 'tags') {
-                return Array.isArray(row.tags) && row.tags.some(tag =>
-                    tag.toLowerCase() === filter.name.toLowerCase()
-                );
-            }
-            
-            return false;
+            return Array.isArray(row.tags) && row.tags.some(tag =>
+                tag.toLowerCase() === filter.name.toLowerCase()
+            );
+
         });
     });
 }
