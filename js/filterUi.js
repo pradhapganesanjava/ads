@@ -1,6 +1,6 @@
 // js/filterUi.js
 import { renderTable } from './leetTable.js';
-import { updateFilterSols, clearActiveFilterSols } from './filterSols.js';
+import { renderFilterSols } from './filterSols.js';
 
 let globalData = null;
 let allCategories = null;
@@ -77,8 +77,8 @@ function updateFilterList() {
         const activeFilters = Object.values(allCategories).flat().filter(item => item.active);
         const filteredData = applyFilter(globalData, activeFilters);
         renderTable(filteredData);
-        clearActiveFilterSols(); // Clear active filter sols before rendering
-        updateFilterSols(filteredData);
+        // clearActiveFilterSols(); // Clear active filter sols before rendering
+        renderFilterSols(filteredData);
     }
 }
 

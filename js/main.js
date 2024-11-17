@@ -87,7 +87,7 @@ async function loadAndRenderData() {
         setGlobalData(mainDataJson);
         renderTable(mainDataJson);
         renderFilters(filterDataJson);
-        renderFilterSols();
+        renderFilterSols(mainDataJson);
         eventBus.publish('showTable');
     } catch (error) {
         handleError(error);

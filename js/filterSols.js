@@ -6,7 +6,7 @@ import { renderTable } from './leetTable.js';
 let filteredData = null;
 let activeFilterSols = [];
 
-export function renderFilterSols(data) {
+export function updateFilterSols(data) {
 
     if (!data || data.length === 0) {
         console.warn('No data to render filter sols');
@@ -93,7 +93,7 @@ function applyFilters() {
                 );
             });
         renderTable(filteredData);
-        renderFilterSols(filteredData);
+        updateFilterSols(filteredData);
     }
 }
 
@@ -102,15 +102,15 @@ export function setGlobalData(data) {
     filteredData = data;
 }
 
-export function updateFilterSols(data) {
-
+export function renderFilterSols(data) {
+    clearActiveFilterSols();
+    
     if (!data || data.length === 0) {
         console.warn('No data to update filter sols');
-        clearActiveFilterSols();
         return;
     }
     filteredData = data;
-    renderFilterSols(filteredData);
+    updateFilterSols(filteredData);
 }
 
 export function clearActiveFilterSols() {
