@@ -47,8 +47,9 @@ export async function getGoodNotesADSFiles() {
     } catch (error) {
         console.error('Error getting nested folder files:', error);
         // Handle the error appropriately
-        throw error; // or return an error JSON response
+        // throw error; // or return an error JSON response
     }
+    return [];
 }
 
 export async function getFiles(folderPath) {
