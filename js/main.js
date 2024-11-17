@@ -35,6 +35,7 @@ function setupEventListeners() {
     document.getElementById('expandFilters').addEventListener('click', expandFilterColumn);
     document.getElementById('collapseFilterSols').addEventListener('click', toggleFilterSolsColumn);
     document.getElementById('expandFilterSols').addEventListener('click', expandFilterSolsColumn);
+    setupEventSubscriptions();
 }
 
 function toggleFilterColumn() {
@@ -113,23 +114,27 @@ async function initDriveADSFiles() {
 function showIframe({ url, title }) {
     const iframeContainer = document.getElementById('iframeContainer');
     const tableContainer = document.getElementById('tableContainer');
-        const iframe = document.getElementById('contentIframe');
-        const iframeTitle = document.getElementById('iframeTitle');
+    const iframe = document.getElementById('contentIframe');
+    const iframeTitle = document.getElementById('iframeTitle');
 
     if (iframe && iframeContainer && iframeTitle) {
-            iframe.src = url;
-            iframeTitle.textContent = title;
-
+        iframe.src = url;
+        iframeTitle.textContent = title;
         tableContainer.classList.add('d-none');
         iframeContainer.classList.remove('d-none');
     } else {
-            console.error('Required elements for iframe not found');
-            eventBus.publish('error', 'Failed to load iframe');
+        console.error('Required elements for iframe not found');
+        eventBus.publish('error', 'Failed to load iframe');
     }
 }
 
+// Add this function to handle closing the iframe
 function hideIframe() {
-    eventBus.publish('showTable');
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+
+    iframeContainer.classList.add('d-none');
+    tableContainer.classList.remove('d-none');
 }
 
 function showTable() {

@@ -1,6 +1,7 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
 import { listDriveFileById } from './gDriveService.js';
+import { eventBus } from './eventBus.js';
 
 export function renderTable(filteredData) {
     const tableElement = document.getElementById('sheetDataTable');
@@ -16,8 +17,11 @@ export function renderTable(filteredData) {
         return FILTER_HEADERS.map(header => {
             if (header === 'title') {
                 const driveFile = listDriveFileById(row.ID);
-                const noteIcon = driveFile ? `<a href="${driveFile.webViewLink}" target="_blank" rel="noopener noreferrer"><i class="fas fa-sticky-note"></i></a>` : '';
-                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a> ${noteIcon}`;
+                const noteIcon = driveFile ? 
+                    `<a href="#" class="note-icon" data-url="${driveFile.webViewLink}" data-title="${row.title}">
+                        <i class="fas fa-sticky-note"></i>
+                    </a>` : '';
+                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}`;
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {
@@ -37,7 +41,7 @@ export function renderTable(filteredData) {
             title: header,
             render: function (data, type, row) {
                 if (type === 'display' && header === 'title') {
-                    return data;  // Return the HTML string for the link and note icon
+                    return data;
                 }
                 return data;
             }
@@ -53,6 +57,14 @@ export function renderTable(filteredData) {
         dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        drawCallback: function() {
+            $('.note-icon').on('click', function(e) {
+                e.preventDefault();
+                const url = $(this).data('url');
+                const title = $(this).data('title');
+                eventBus.publish('showIframe', { url, title });
+            });
+        }
     });
 }
