@@ -1,5 +1,6 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
+import { listDriveFileById } from './gDriveService.js';
 
 export function renderTable(filteredData) {
     const tableElement = document.getElementById('sheetDataTable');
@@ -7,14 +8,16 @@ export function renderTable(filteredData) {
         console.error('Table element not found');
         return;
     }
-    
+
     const tableHeaders = FILTER_HEADERS.map(header => `<th>${header}</th>`).join('');
     $('#sheetDataTable thead').html(`<tr>${tableHeaders}</tr>`);
 
     const tableData = filteredData.map(row => {
         return FILTER_HEADERS.map(header => {
             if (header === 'title') {
-                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>`;
+                const driveFile = listDriveFileById(row.id);
+                const noteIcon = driveFile ? `<a href="${driveFile.webViewLink}" target="_blank" rel="noopener noreferrer"><i class="fas fa-sticky-note"></i></a>` : '';
+                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a> ${noteIcon}`;
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {
@@ -30,11 +33,11 @@ export function renderTable(filteredData) {
 
     $('#sheetDataTable').DataTable({
         data: tableData,
-        columns: FILTER_HEADERS.map(header => ({ 
+        columns: FILTER_HEADERS.map(header => ({
             title: header,
-            render: function(data, type, row) {
+            render: function (data, type, row) {
                 if (type === 'display' && header === 'title') {
-                    return data;  // Return the HTML string for the link
+                    return data;  // Return the HTML string for the link and note icon
                 }
                 return data;
             }

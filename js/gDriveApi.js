@@ -4,7 +4,7 @@ export const GoogleDriveAPI = {
     async listFiles(folderId = 'root') {
         try {
             const response = await gapi.client.drive.files.list({
-                'pageSize': 10,
+                'pageSize': 2000,
                 'fields': 'files(id, name, webViewLink)',
                 'q': `'${folderId}' in parents`
             });

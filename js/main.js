@@ -12,6 +12,9 @@ import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 import { getGoodNotesADSFiles } from './gDriveService.js';
 
+// Global variable to store Drive files
+let globalDriveFiles = [];
+
 async function init() {
     try {
         await initializeApp(CONFIG);
@@ -86,6 +89,7 @@ async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
         const { mainData, filterData, mainDataJson, filterDataJson } = await fetchSheetData();
+        await initDriveADSFiles(); // Load Drive files
         setGlobalData(mainDataJson);
         renderTable(mainDataJson);
         renderFilters(filterDataJson);
@@ -98,11 +102,10 @@ async function loadAndRenderData() {
     }
 }
 
-async function listDriveFiles() {
+async function initDriveADSFiles() {
     try {
         const files = await getGoodNotesADSFiles();
         console.log('Files in Drive:', files);
-        // You can add logic here to display the files in your UI
     } catch (error) {
         handleError(error);
     }
