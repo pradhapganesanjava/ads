@@ -13,15 +13,13 @@ export function updateFilterSols(data) {
         return;
     }
 
-    filteredData = data;
-
     const filterSolsSection = emptyFilterSolsContainer(); // Clear existing content
 
     // Sort activeFilterSols
     activeFilterSols.sort((a, b) => a.tag.localeCompare(b.tag));
 
-    renderTagSection(filteredData, filterSolsSection, 'Tags', 'tags');
-    renderTagSection(filteredData, filterSolsSection, 'Relation Tags', 'relation_tag');
+    renderTagSection(data, filterSolsSection, 'Tags', 'tags');
+    renderTagSection(data, filterSolsSection, 'Relation Tags', 'relation_tag');
 }
 
 function renderTagSection(data, container, title, tagType) {
@@ -97,11 +95,6 @@ function applyFilters() {
     }
 }
 
-export function setGlobalData(data) {
-    // globalData = data;
-    filteredData = data;
-}
-
 export function renderFilterSols(data) {
     clearActiveFilterSols();
     
@@ -110,7 +103,7 @@ export function renderFilterSols(data) {
         return;
     }
     filteredData = data;
-    updateFilterSols(filteredData);
+    updateFilterSols(data);
 }
 
 export function clearActiveFilterSols() {
