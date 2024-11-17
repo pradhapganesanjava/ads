@@ -71,7 +71,6 @@ async function handleAuthClick() {
         updateState({ isAuthorized, isLoading: false });
         if (isAuthorized) {
             await loadAndRenderData();
-            await listDriveFiles(); // New function to list Drive files
         }
     } catch (error) {
         handleError(error);
