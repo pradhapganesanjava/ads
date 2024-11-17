@@ -18,6 +18,11 @@ export async function getGoodNotesADSFiles() {
         // const files = await GoogleDriveAPI.listFiles(GDRIVE_GOODNOTES_ADS_FID);
         const files = await listFilesByPath(GDRIVE_GOODNOTES_ADS_PATH);
 
+        if (!files) {
+            console.error('No files found in the folder:', GDRIVE_GOODNOTES_ADS_PATH);
+            return [];
+        }
+
         // Process the files
         const processedFiles = files
             .map(file => {
@@ -58,12 +63,13 @@ export async function listFilesByPath(folderPath) {
         const specificFolderId = await GoogleDriveAPI.getFolderIdByPath(folderPath);
 
         // List files in the folder
-        const files = await GoogleDriveAPI.listFiles(specificFolderId);
+        files = await GoogleDriveAPI.listFiles(specificFolderId);
 
         console.log('Files in the nested folder:', files);
-        // You can add logic here to display the files in your UI
+        
+        return files;
     } catch (error) {
         console.error('Error getting nested folder files:', error);
-        // Handle the error appropriately
     }
+    return [];
 }
