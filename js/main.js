@@ -118,13 +118,19 @@ function showIframe({ url, title }) {
     const iframeTitle = document.getElementById('iframeTitle');
 
     if (iframe && iframeContainer && iframeTitle) {
+        iframe.onload = function () {
+            tableContainer.classList.add('d-none');
+            iframeContainer.classList.remove('d-none');
+        };
+        iframe.onerror = function () {
+            console.error('Failed to load iframe');
+            showTable();
+        };
         iframe.src = url;
         iframeTitle.textContent = title;
-        tableContainer.classList.add('d-none');
-        iframeContainer.classList.remove('d-none');
     } else {
         console.error('Required elements for iframe not found');
-        eventBus.publish('error', 'Failed to load iframe');
+        showTable();
     }
 }
 
@@ -143,6 +149,12 @@ function showTable() {
 
     iframeContainer.classList.add('d-none');
     tableContainer.classList.remove('d-none');
+
+    // Clear the iframe src
+    const iframe = document.getElementById('contentIframe');
+    if (iframe) {
+        iframe.src = '';
+    }
 }
 
 function handleViewError(errorMessage) {

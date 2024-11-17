@@ -17,8 +17,8 @@ export function renderTable(filteredData) {
         return FILTER_HEADERS.map(header => {
             if (header === 'title') {
                 const driveFile = listDriveFileById(row.ID);
-                const noteIcon = driveFile ? 
-                    `<a href="#" class="note-icon" data-url="${driveFile.previewLink}" data-title="${row.title}">
+                const noteIcon = driveFile ?
+                    `<a href="#" class="note-icon" data-url="https://drive.google.com/file/d/${driveFile.id}/preview" data-title="${row.title}">
                         <i class="fas fa-sticky-note"></i>
                     </a>` : '';
                 return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}`;
