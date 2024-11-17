@@ -3,12 +3,20 @@
 export const GoogleDriveAPI = {
     async listFiles(folderId = 'root') {
         try {
-            const response = await gapi.client.drive.files.list({
-                'pageSize': 2000,
-                'fields': 'files(id, name, webViewLink)',
-                'q': `'${folderId}' in parents`
-            });
-            return response.result.files;
+            const allFiles = [];
+            let pageToken = null;
+            do {
+                const response = await gapi.client.drive.files.list({
+                    'pageSize': 1000, // Maximum allowed page size
+                    'fields': 'nextPageToken, files(id, name, webViewLink)',
+                    'q': `'${folderId}' in parents`,
+                    'pageToken': pageToken,
+                });
+                allFiles.push(...response.result.files);
+                pageToken = response.result.nextPageToken;
+            } while (pageToken);
+
+            return allFiles;
         } catch (err) {
             console.error('Error in listFiles:', err);
             throw err;
