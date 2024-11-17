@@ -86,14 +86,14 @@ function updateActiveFilterSols() {
 
 function applyFilters() {
     if (filteredData) {
-        filteredData = filteredData.filter(item => {
+        const tempFilteredData = filteredData.filter(item => {
             if (activeFilterSols.length === 0) return true;
             return activeFilterSols.every(filter => 
                     (item[filter.tagType] && Array.isArray(item[filter.tagType]) && item[filter.tagType].includes(filter.tag))
                 );
             });
-        renderTable(filteredData);
-        updateFilterSols(filteredData);
+        renderTable(tempFilteredData);
+        updateFilterSols(tempFilteredData);
     }
 }
 
