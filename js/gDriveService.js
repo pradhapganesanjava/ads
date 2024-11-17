@@ -10,7 +10,7 @@ export function setGlobalDriveFiles(files) {
 }
 
 export function listDriveFileById(noteId) {
-    return globalDriveFiles.find(file => file.id === noteId) || null;
+    return globalDriveFiles.find(file => file.note_id === noteId) || null;
 }
 export async function getGoodNotesADSFiles() {
     try {

@@ -15,7 +15,7 @@ export function renderTable(filteredData) {
     const tableData = filteredData.map(row => {
         return FILTER_HEADERS.map(header => {
             if (header === 'title') {
-                const driveFile = listDriveFileById(row.id);
+                const driveFile = listDriveFileById(row.ID);
                 const noteIcon = driveFile ? `<a href="${driveFile.webViewLink}" target="_blank" rel="noopener noreferrer"><i class="fas fa-sticky-note"></i></a>` : '';
                 return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a> ${noteIcon}`;
             } else if (header === 'tags') {
