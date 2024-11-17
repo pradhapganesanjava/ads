@@ -1,7 +1,7 @@
 // js gDriveService.js
 
 import { GoogleDriveAPI } from './gDriveApi.js';
-import { GDRIVE_GOODNOTES_ADS_FID } from './const.js';
+import { GDRIVE_GOODNOTES_ADS_PATH } from './const.js';
 
 let globalDriveFiles = [];
 
@@ -15,7 +15,8 @@ export function listDriveFileById(noteId) {
 export async function getGoodNotesADSFiles() {
     try {
         // List files in the folder
-        const files = await GoogleDriveAPI.listFiles(GDRIVE_GOODNOTES_ADS_FID);
+        // const files = await GoogleDriveAPI.listFiles(GDRIVE_GOODNOTES_ADS_FID);
+        const files = await GoogleDriveAPI.getFolderIdByPath(GDRIVE_GOODNOTES_ADS_PATH);
 
         // Process the files
         const processedFiles = files

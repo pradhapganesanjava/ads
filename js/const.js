@@ -8,5 +8,5 @@ export const FILTER_RANGE = 'filter';
 // export const FILTER_HEADERS = ['ID', 'title', 'difficulty', 'frequency'];
 export const FILTER_HEADERS = ['ID', 'title', 'difficulty', 'frequency', 'tags', 'relation_tag'];
 
-export const MYLEET_PROBS_GDRIVE_PATH = 'GoodNotes/ALG - DS/Leetcode_Probs';
+export const GDRIVE_GOODNOTES_ADS_PATH = 'GoodNotes/ALG - DS/Leetcode_Probs';
 export const GDRIVE_GOODNOTES_ADS_FID = '1XyRAfIuAopMpGIUmjlPhTpmGrHXFGB-8';
