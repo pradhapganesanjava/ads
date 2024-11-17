@@ -16,7 +16,7 @@ export async function getGoodNotesADSFiles() {
     try {
         // List files in the folder
         // const files = await GoogleDriveAPI.listFiles(GDRIVE_GOODNOTES_ADS_FID);
-        const files = await GoogleDriveAPI.getFolderIdByPath(GDRIVE_GOODNOTES_ADS_PATH);
+        const files = await listFilesByPath(GDRIVE_GOODNOTES_ADS_PATH);
 
         // Process the files
         const processedFiles = files
@@ -52,7 +52,7 @@ export async function getGoodNotesADSFiles() {
     return [];
 }
 
-export async function getFiles(folderPath) {
+export async function listFilesByPath(folderPath) {
     try {
         // Get the folder ID
         const specificFolderId = await GoogleDriveAPI.getFolderIdByPath(folderPath);
