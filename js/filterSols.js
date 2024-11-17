@@ -15,8 +15,7 @@ export function renderFilterSols(data) {
 
     filteredData = data;
 
-    const filterSolsSection = document.querySelector('.filter-sols-section');
-    filterSolsSection.innerHTML = ''; // Clear existing content
+    const filterSolsSection = emptyFilterSolsContainer(); // Clear existing content
 
     // Sort activeFilterSols
     activeFilterSols.sort((a, b) => a.tag.localeCompare(b.tag));
@@ -116,7 +115,13 @@ export function updateFilterSols(data) {
 
 export function clearActiveFilterSols() {
     activeFilterSols = [];
-    filterSolsSection.innerHTML = '';
+    emptyFilterSolsContainer();
+}
+
+function emptyFilterSolsContainer() {
+    const filterSolsSection = document.querySelector('.filter-sols-section');
+    filterSolsSection.innerHTML = ''; // Clear existing content
+    return filterSolsSection;
 }
 
 export function setupFilterSolsToggle() {
