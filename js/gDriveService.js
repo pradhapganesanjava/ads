@@ -63,7 +63,7 @@ export async function listFilesByPath(folderPath) {
         const specificFolderId = await GoogleDriveAPI.getFolderIdByPath(folderPath);
 
         // List files in the folder
-        files = await GoogleDriveAPI.listFiles(specificFolderId);
+        const files = await GoogleDriveAPI.listFiles(specificFolderId);
 
         console.log('Files in the nested folder:', files);
         
