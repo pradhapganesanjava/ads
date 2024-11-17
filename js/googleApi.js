@@ -14,11 +14,10 @@ export function loadGoogleApis() {
     });
 }
 
-export async function initializeGapiClient(apiKey, discoveryDoc) {
+export async function initializeGapiClient(apiKey, discoveryDocs) {
     await new Promise((resolve) => gapi.load('client', resolve));
     await gapi.client.init({
-        // apiKey: apiKey,
-        discoveryDocs: [discoveryDoc],
+        discoveryDocs: Object.values(discoveryDocs),
     });
 }
 

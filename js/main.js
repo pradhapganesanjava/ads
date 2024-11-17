@@ -10,6 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
+import { getGoodNotesADSFiles } from './gDriveService.js';
 
 async function init() {
     try {
@@ -67,6 +68,7 @@ async function handleAuthClick() {
         updateState({ isAuthorized, isLoading: false });
         if (isAuthorized) {
             await loadAndRenderData();
+            await listDriveFiles(); // New function to list Drive files
         }
     } catch (error) {
         handleError(error);
@@ -93,6 +95,16 @@ async function loadAndRenderData() {
         handleError(error);
     } finally {
         updateState({ isLoading: false });
+    }
+}
+
+async function listDriveFiles() {
+    try {
+        const files = await getGoodNotesADSFiles();
+        console.log('Files in Drive:', files);
+        // You can add logic here to display the files in your UI
+    } catch (error) {
+        handleError(error);
     }
 }
 
