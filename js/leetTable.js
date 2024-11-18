@@ -61,7 +61,7 @@ export function renderTable(filteredData) {
         drawCallback: function () {
             $('.note-icon').on('click', function (e) {
                 e.preventDefault();
-                const fileId = $(this).data('file-id');
+                const fileId = $(this).data('id');
                 const title = $(this).data('title');
                 eventBus.publish('showIframe', { fileId, title });
             });
