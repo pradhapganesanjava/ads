@@ -108,7 +108,7 @@ async function initDriveADSFiles() {
         handleError(error);
     }
 }
-async function showPdfViewer({ fileId, title }) {
+function showPdfViewer(fileId, title) {
     const width = 1200;
     const height = 800;
     const left = (window.screen.width - width) / 2;
@@ -120,14 +120,24 @@ async function showPdfViewer({ fileId, title }) {
             <html>
                 <head>
                     <title>${title}</title>
+                    <style>
+                        body, html, iframe {
+                            margin: 0;
+                            padding: 0;
+                            height: 100%;
+                            width: 100%;
+                            border: none;
+                        }
+                    </style>
                 </head>
                 <body>
-                    <div id="pdf-viewer"></div>
+                    <iframe id="pdf-viewer"></iframe>
                     <script>
                         window.addEventListener('message', function(event) {
                             if (event.data.type === 'showPdfViewer') {
-                                // Implement your PDF viewer logic here
-                                console.log('Showing PDF viewer for file:', event.data.fileId);
+                                const fileId = event.data.fileId;
+                                const previewLink = 'https://drive.google.com/file/d/' + fileId + '/preview';
+                                document.getElementById('pdf-viewer').src = previewLink;
                             }
                         });
                     </script>
