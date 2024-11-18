@@ -33,7 +33,6 @@ function setupEventListeners() {
     document.getElementById('collapseFilterSols').addEventListener('click', toggleFilterSolsColumn);
     document.getElementById('expandFilterSols').addEventListener('click', expandFilterSolsColumn);
 
-    document.getElementById('closePdfViewer').addEventListener('click', closePdfViewer);
     setupEventSubscriptions();
 }
 
