@@ -10,8 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
-import { getGoodNotesADSFiles, fetchPdfFromDrive } from './gDriveService.js';
-import { renderPDF, closePdfViewer } from './pdfViewer.js';
+import { getGoodNotesADSFiles } from './gDriveService.js';
 
 async function init() {
     try {
@@ -32,7 +31,7 @@ function setupEventListeners() {
     document.getElementById('expandFilters').addEventListener('click', expandFilterColumn);
     document.getElementById('collapseFilterSols').addEventListener('click', toggleFilterSolsColumn);
     document.getElementById('expandFilterSols').addEventListener('click', expandFilterSolsColumn);
-
+    document.getElementById('closeIframe').addEventListener('click', hideIframe);
     setupEventSubscriptions();
 }
 
@@ -57,8 +56,8 @@ function expandFilterSolsColumn() {
 }
 
 function setupEventSubscriptions() {
-    eventBus.subscribe('showPdfViewer', showPdfViewer);
-    eventBus.subscribe('closePdfViewer', closePdfViewer);
+    eventBus.subscribe('showIframe', showIframe);
+    eventBus.subscribe('closeIframe', hideIframe);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
 }
@@ -108,44 +107,108 @@ async function initDriveADSFiles() {
         handleError(error);
     }
 }
-async function showPdfViewer({ fileId, title }) {
-    try {
-        // updateState({ isLoading: true });
-        const pdfBlob = await fetchPdfFromDrive(fileId);
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+function showIframe({ fileId, title }) {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+    const iframe = document.getElementById('contentIframe');
+    const pdfViewer = document.getElementById('pdfViewer');
+    const iframeTitle = document.getElementById('iframeTitle');
 
-        const pdfViewerContainer = document.getElementById('pdfViewerContainer');
-        const pdfTitle = document.getElementById('pdfTitle');
+    if (iframe && pdfViewer && iframeContainer && iframeTitle) {
+        iframeTitle.textContent = title;
 
-        if (pdfViewerContainer && pdfTitle) {
-            pdfTitle.textContent = title;
-            renderPDF(pdfUrl);
+        // First, try Google Drive preview
+        const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
 
-            // Show the modal
-            $('#pdfViewerModal').modal('show');
-        } else {
-            console.error('Required elements for PDF viewer not found');
-            showFallback(fileId);
-        }
-    } catch (error) {
-        console.error('Error fetching PDF:', error);
+        iframe.onload = function () {
+            tableContainer.classList.add('d-none');
+            iframeContainer.classList.remove('d-none');
+            iframe.style.display = 'block';
+            pdfViewer.style.display = 'none';
+        };
+
+        iframe.onerror = function () {
+            console.error('Failed to load Google Drive preview, falling back to PDF.js');
+            renderWithPDFJS(fileId);
+        };
+
+        iframe.src = previewUrl;
+    } else {
+        console.error('Required elements for viewer not found');
         showFallback(fileId);
     }
 }
 
-function showFallback(fileId) {
-    const fallbackContainer = document.getElementById('fallbackContainer');
-    const fallbackLink = document.getElementById('fallbackLink');
+function renderWithPDFJS(fileId) {
+    const pdfViewer = document.getElementById('pdfViewer');
+    const iframe = document.getElementById('contentIframe');
+    const tableContainer = document.getElementById('tableContainer');
+    const iframeContainer = document.getElementById('iframeContainer');
 
-    if (fallbackContainer && fallbackLink) {
-        fallbackContainer.style.display = 'block';
-        fallbackLink.href = `https://drive.google.com/file/d/${fileId}/view`;
-        $('#pdfViewerModal').modal('hide');
-    }
+    // Construct PDF URL
+    const pdfUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    // Use PDF.js to render the PDF
+    pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+        pdf.getPage(1).then(function (page) {
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale: scale });
+            const context = pdfViewer.getContext('2d');
+
+            pdfViewer.height = viewport.height;
+            pdfViewer.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            page.render(renderContext);
+
+            tableContainer.classList.add('d-none');
+            iframeContainer.classList.remove('d-none');
+            iframe.style.display = 'none';
+            pdfViewer.style.display = 'block';
+        });
+    }).catch(function (error) {
+        console.error('Failed to load PDF with PDF.js', error);
+        showFallback(fileId);
+    });
 }
 
-function showTable() {
+function showFallback(fileId) {
+    const fallback = document.getElementById('iframeFallback');
+    const openInNewTab = document.getElementById('openInNewTab');
+    fallback.style.display = 'block';
+    openInNewTab.href = `https://drive.google.com/file/d/${fileId}/view`;
+    showTable();
+}
+
+function hideIframe() {
+    const iframeContainer = document.getElementById('iframeContainer');
     const tableContainer = document.getElementById('tableContainer');
+    const iframe = document.getElementById('contentIframe');
+    const pdfViewer = document.getElementById('pdfViewer');
+
+    iframeContainer.classList.add('d-none');
+    tableContainer.classList.remove('d-none');
+
+    // Clear the iframe src
+    if (iframe) {
+        iframe.src = '';
+    }
+
+    // Clear the PDF viewer
+    if (pdfViewer) {
+        const context = pdfViewer.getContext('2d');
+        context.clearRect(0, 0, pdfViewer.width, pdfViewer.height);
+    }
+}
+function showTable() {
+    const iframeContainer = document.getElementById('iframeContainer');
+    const tableContainer = document.getElementById('tableContainer');
+
+    iframeContainer.classList.add('d-none');
     tableContainer.classList.remove('d-none');
 }
 

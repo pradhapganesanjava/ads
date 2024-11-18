@@ -68,7 +68,9 @@ function onZoomOut() {
     renderPage(pageNum);
 }
 
-export function renderPDF(pdfUrl) {
+export function renderPDF(fileId) {
+    const pdfUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+
     // Show loading indicator
     showLoading();
 
@@ -79,7 +81,7 @@ export function renderPDF(pdfUrl) {
     }).catch(function (error) {
         console.error('Error loading PDF:', error);
         hideLoading();
-        eventBus.publish('showFallback');
+        showFallback(fileId);
     });
 
     document.getElementById('prevPage').addEventListener('click', onPrevPage);
@@ -119,7 +121,11 @@ function showFallback(fileId) {
 }
 
 export function closePdfViewer() {
-    $('#pdfViewerModal').modal('hide');
+    const pdfViewerContainer = document.getElementById('pdfViewerContainer');
+    const tableContainer = document.getElementById('tableContainer');
+
+    pdfViewerContainer.classList.add('d-none');
+    tableContainer.classList.remove('d-none');
 
     // Reset PDF viewer state
     pdfDoc = null;
@@ -130,4 +136,6 @@ export function closePdfViewer() {
     const canvas = document.getElementById('pdfViewer');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    eventBus.publish('showTable');
 }
