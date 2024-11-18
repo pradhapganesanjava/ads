@@ -111,7 +111,7 @@ async function initDriveADSFiles() {
 }
 async function showPdfViewer({ fileId, title }) {
     try {
-        updateState({ isLoading: true });
+        // updateState({ isLoading: true });
         const pdfBlob = await fetchPdfFromDrive(fileId);
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
@@ -131,8 +131,6 @@ async function showPdfViewer({ fileId, title }) {
     } catch (error) {
         console.error('Error fetching PDF:', error);
         showFallback(fileId);
-    } finally {
-        updateState({ isLoading: false });
     }
 }
 
