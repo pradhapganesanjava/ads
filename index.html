@@ -61,6 +61,7 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <!-- iframe -->
                 <div id="iframeContainer" style="display: none;">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
@@ -70,14 +71,15 @@
                             </button>
                         </div>
                         <div class="card-body p-0">
-                            <canvas id="pdfViewer"></canvas>
+                            <iframe id="contentIframe" style="width:100%; height:100%; border:none;"></iframe>
+                            <canvas id="pdfViewer" style="width:100%; height:100%; display:none;"></canvas>
                             <div id="iframeFallback" style="display:none; padding: 20px;">
-                                Unable to display the content.
-                                <a href="#" id="openInNewTab">Open in new tab</a>
+                                Unable to display the content. <a href="#" id="openInNewTab">Open in new tab</a>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             
             <!-- Right Column - Filter Sols Section -->
