@@ -18,7 +18,7 @@ export function renderTable(filteredData) {
             if (header === 'title') {
                 const driveFile = listDriveFileById(row.ID);
                 const noteIcon = driveFile ?
-                    `<a href="#" class="note-icon" data-url="https://drive.google.com/file/d/${driveFile.id}/preview" data-title="${row.title}">
+                    `<a href="#" class="note-icon" data-file-id="${driveFile.id}" data-title="${row.title}">
                         <i class="fas fa-sticky-note"></i>
                     </a>` : '';
                 return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}`;
@@ -61,7 +61,7 @@ export function renderTable(filteredData) {
         drawCallback: function () {
             $('.note-icon').on('click', function (e) {
                 e.preventDefault();
-                const fileId = $(this).data('id');
+                const fileId = $(this).data('file-id');
                 const title = $(this).data('title');
                 eventBus.publish('showIframe', { fileId, title });
             });
