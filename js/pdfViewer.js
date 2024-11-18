@@ -68,16 +68,56 @@ function onZoomOut() {
     renderPage(pageNum);
 }
 
-export function renderPDF(pdfUrl) {
+export function renderPDF(fileId) {
+    const pdfUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+
+    // Show loading indicator
+    showLoading();
+
     pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
         pdfDoc = pdf;
         renderPage(pageNum);
+        hideLoading();
+    }).catch(function (error) {
+        console.error('Error loading PDF:', error);
+        hideLoading();
+        showFallback(fileId);
     });
 
     document.getElementById('prevPage').addEventListener('click', onPrevPage);
     document.getElementById('nextPage').addEventListener('click', onNextPage);
     document.getElementById('zoomIn').addEventListener('click', onZoomIn);
     document.getElementById('zoomOut').addEventListener('click', onZoomOut);
+}
+
+function showLoading() {
+    // Show a loading spinner or message
+    const loadingElement = document.getElementById('pdfLoading');
+    if (loadingElement) {
+        loadingElement.style.display = 'block';
+    }
+}
+
+function hideLoading() {
+    // Hide the loading spinner or message
+    const loadingElement = document.getElementById('pdfLoading');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
+}
+
+function showFallback(fileId) {
+    const fallbackContainer = document.getElementById('fallbackContainer');
+    const fallbackLink = document.getElementById('fallbackLink');
+    const pdfViewerContainer = document.getElementById('pdfViewerContainer');
+
+    if (fallbackContainer && fallbackLink && pdfViewerContainer) {
+        pdfViewerContainer.style.display = 'none';
+        fallbackContainer.style.display = 'block';
+        fallbackLink.href = `https://drive.google.com/file/d/${fileId}/view`;
+    }
+
+    console.error('Failed to load PDF, showing fallback');
 }
 
 export function closePdfViewer() {

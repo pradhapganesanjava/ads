@@ -118,7 +118,8 @@ function showPdfViewer({ fileId, title }) {
     if (pdfViewerContainer && pdfTitle) {
         pdfTitle.textContent = title;
 
-        const pdfUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        // const pdfUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        const pdfUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
 
         renderPDF(pdfUrl);
 
