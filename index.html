@@ -65,34 +65,33 @@
                 <!-- PDF Viewer Modal -->
                 <div class="modal fade" id="pdfViewerModal" tabindex="-1" role="dialog" aria-labelledby="pdfViewerModalLabel"
                     aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="pdfTitle">PDF Viewer</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="pdfViewerContainer">
-                                        <div class="text-center mb-2">
-                                            <button id="prevPage" class="btn btn-sm btn-outline-secondary">Previous</button>
-                                            <span id="pageInfo"></span>
-                                            <button id="nextPage" class="btn btn-sm btn-outline-secondary">Next</button>
-                                            <button id="zoomIn" class="btn btn-sm btn-outline-secondary">Zoom In</button>
-                                            <button id="zoomOut" class="btn btn-sm btn-outline-secondary">Zoom Out</button>
-                                        </div>
-                                        <canvas id="pdfViewer" style="width:100%; border:none;"></canvas>
-                                        <div id="pdfLoading" style="display: none;">Loading PDF...</div>
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pdfTitle">PDF Viewer</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="pdfViewerContainer">
+                                    <div class="text-center mb-2">
+                                        <button id="prevPage" class="btn btn-sm btn-outline-secondary">Previous</button>
+                                        <span id="pageInfo"></span>
+                                        <button id="nextPage" class="btn btn-sm btn-outline-secondary">Next</button>
+                                        <button id="zoomIn" class="btn btn-sm btn-outline-secondary">Zoom In</button>
+                                        <button id="zoomOut" class="btn btn-sm btn-outline-secondary">Zoom Out</button>
                                     </div>
+                                    <canvas id="pdfViewer" style="width:100%; border:none;"></canvas>
+                                    <div id="pdfLoading" style="display: none;">Loading PDF...</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div id="fallbackContainer" style="display: none;">
-                        <p>Unable to load the PDF directly. <a id="fallbackLink" href="#" target="_blank">Open in Google Drive</a></p>
-                    </div>
+                <div id="fallbackContainer" style="display: none;">
+                    <p>Unable to load the PDF directly. <a id="fallbackLink" href="#" target="_blank">Open in Google Drive</a></p>
                 </div>
 
             </div>
