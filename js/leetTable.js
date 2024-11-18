@@ -63,7 +63,7 @@ export function renderTable(filteredData) {
                 e.preventDefault();
                 const fileId = $(this).data('file-id');
                 const title = $(this).data('title');
-                eventBus.publish('showIframe', { fileId, title });
+                eventBus.publish('showPdfViewer', { fileId, title });
             });
         }
     });

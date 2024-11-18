@@ -61,21 +61,24 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <!-- iframe -->
-                <div id="iframeContainer" style="display: none;">
+                <!-- pdfViewer -->
+                <div id="pdfViewerContainer" style="display: none;">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 id="iframeTitle" class="mb-0">Content</h5>
-                            <button type="button" class="close" id="closeIframe" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <h5 id="pdfTitle" class="mb-0">PDF Viewer</h5>
+                            <div>
+                                <button id="prevPage" class="btn btn-sm btn-outline-secondary">Previous</button>
+                                <span id="pageInfo"></span>
+                                <button id="nextPage" class="btn btn-sm btn-outline-secondary">Next</button>
+                                <button id="zoomIn" class="btn btn-sm btn-outline-secondary">Zoom In</button>
+                                <button id="zoomOut" class="btn btn-sm btn-outline-secondary">Zoom Out</button>
+                                <button type="button" class="close" id="closePdfViewer" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body p-0">
-                            <iframe id="contentIframe" style="width:100%; height:100%; border:none;"></iframe>
-                            <canvas id="pdfViewer" style="width:100%; height:100%; display:none;"></canvas>
-                            <div id="iframeFallback" style="display:none; padding: 20px;">
-                                Unable to display the content. <a href="#" id="openInNewTab">Open in new tab</a>
-                            </div>
+                            <canvas id="pdfViewer" style="width:100%; border:none;"></canvas>
                         </div>
                     </div>
                 </div>
