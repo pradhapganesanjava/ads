@@ -58,12 +58,12 @@ export function renderTable(filteredData) {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        drawCallback: function() {
-            $('.note-icon').on('click', function(e) {
+        drawCallback: function () {
+            $('.note-icon').on('click', function (e) {
                 e.preventDefault();
-                const url = $(this).data('url');
+                const fileId = $(this).data('file-id');
                 const title = $(this).data('title');
-                eventBus.publish('showIframe', { url, title });
+                eventBus.publish('showIframe', { fileId, title });
             });
         }
     });

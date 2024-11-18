@@ -61,19 +61,20 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div id="iframeContainer" style="display: none;">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 id="iframeTitle" class="mb-0">Content</h5>
-                            <button type="button" class="close" id="closeIframe" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="card-body p-0">
-                            <iframe id="contentIframe" style="width:100%; height:100%; border:none;"></iframe>
-                            <div id="iframeFallback" style="display:none; padding: 20px;">
-                                Unable to display the content. <a href="#" id="openInNewTab">Open in new tab</a>
-                            </div>
+
+            <div id="iframeContainer" style="display: none;">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 id="iframeTitle" class="mb-0">Content</h5>
+                        <button type="button" class="close" id="closeIframe" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <canvas id="pdfViewer"></canvas>
+                        <div id="iframeFallback" style="display:none; padding: 20px;">
+                            Unable to display the content.
+                            <a href="#" id="openInNewTab">Open in new tab</a>
                         </div>
                     </div>
                 </div>
@@ -122,6 +123,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
 
     <!-- Your custom script -->
     <script type="module" src="js/main.js"></script>

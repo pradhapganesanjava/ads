@@ -8,25 +8,17 @@ export const GoogleDriveAPI = {
             do {
                 const response = await gapi.client.drive.files.list({
                     'pageSize': 1000,
-                    'fields': 'nextPageToken, files(id, name, webViewLink, webContentLink, mimeType)',
+                    'fields': 'nextPageToken, files(id, name, webViewLink, mimeType)',
                     'q': `'${folderId}' in parents`,
                     'pageToken': pageToken,
                 });
 
                 const files = response.result.files;
                 files.forEach(file => {
-                    let previewLink = file.webContentLink;
-
-                    // For Google Docs, Sheets, Slides
-                    if (file.mimeType.includes('application/vnd.google-apps.')) {
-                        previewLink = `https://drive.google.com/file/d/${file.id}/preview`;
-                    }
-
                     allFiles.push({
                         id: file.id,
                         name: file.name,
                         webViewLink: file.webViewLink,
-                        previewLink: previewLink,
                         mimeType: file.mimeType
                     });
                 });
