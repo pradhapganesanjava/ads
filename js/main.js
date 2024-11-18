@@ -58,7 +58,7 @@ function expandFilterSolsColumn() {
 
 function setupEventSubscriptions() {
     eventBus.subscribe('showPdfViewer', showPdfViewer);
-    eventBus.subscribe('closePdfViewer', closePdfViewer);
+    // eventBus.subscribe('closePdfViewer', closePdfViewer);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
 }
@@ -109,38 +109,37 @@ async function initDriveADSFiles() {
     }
 }
 async function showPdfViewer({ fileId, title }) {
-    try {
-        // updateState({ isLoading: true });
-        const pdfBlob = await fetchPdfFromDrive(fileId);
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+    const width = 1200;
+    const height = 800;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const newWindow = window.open('', '_blank', `width=${width},height=${height},left=${left},top=${top}`);
 
-        const pdfViewerContainer = document.getElementById('pdfViewerContainer');
-        const pdfTitle = document.getElementById('pdfTitle');
+    if (newWindow) {
+        newWindow.document.write(`
+            <html>
+                <head>
+                    <title>${title}</title>
+                </head>
+                <body>
+                    <div id="pdf-viewer"></div>
+                    <script>
+                        window.addEventListener('message', function(event) {
+                            if (event.data.type === 'showPdfViewer') {
+                                // Implement your PDF viewer logic here
+                                console.log('Showing PDF viewer for file:', event.data.fileId);
+                            }
+                        });
+                    </script>
+                </body>
+            </html>
+        `);
+        newWindow.document.close();
 
-        if (pdfViewerContainer && pdfTitle) {
-            pdfTitle.textContent = title;
-            renderPDF(pdfUrl);
-
-            // Show the modal
-            $('#pdfViewerModal').modal('show');
-        } else {
-            console.error('Required elements for PDF viewer not found');
-            showFallback(fileId);
-        }
-    } catch (error) {
-        console.error('Error fetching PDF:', error);
-        showFallback(fileId);
-    }
-}
-
-function showFallback(fileId) {
-    const fallbackContainer = document.getElementById('fallbackContainer');
-    const fallbackLink = document.getElementById('fallbackLink');
-
-    if (fallbackContainer && fallbackLink) {
-        fallbackContainer.style.display = 'block';
-        fallbackLink.href = `https://drive.google.com/file/d/${fileId}/view`;
-        $('#pdfViewerModal').modal('hide');
+        // Send a message to the new window with the file information
+        newWindow.postMessage({ type: 'showPdfViewer', fileId: fileId }, '*');
+    } else {
+        console.error('Unable to open new window. Pop-up blocker may be enabled.');
     }
 }
 
