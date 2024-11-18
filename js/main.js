@@ -113,43 +113,14 @@ function showPdfViewer(fileId, title) {
     const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
-    const newWindow = window.open('', '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+    const pdfViewerUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+    const newWindow = window.open(pdfViewerUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
 
     if (newWindow) {
-        newWindow.document.write(`
-            <html>
-                <head>
-                    <title>${title}</title>
-                    <style>
-                        body, html, iframe {
-                            margin: 0;
-                            padding: 0;
-                            height: 100%;
-                            width: 100%;
-                            border: none;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <iframe id="pdf-viewer"></iframe>
-                    <script>
-                        window.addEventListener('message', function(event) {
-                            if (event.data.type === 'showPdfViewer') {
-                                const fileId = event.data.fileId;
-                                const previewLink = 'https://drive.google.com/file/d/' + fileId + '/preview';
-                                document.getElementById('pdf-viewer').src = previewLink;
-                            }
-                        });
-                    </script>
-                </body>
-            </html>
-        `);
-        newWindow.document.close();
-
-        // Send a message to the new window with the file information
-        newWindow.postMessage({ type: 'showPdfViewer', fileId: fileId }, '*');
+        newWindow.focus();
     } else {
         console.error('Unable to open new window. Pop-up blocker may be enabled.');
+        alert('Please allow pop-ups for this site to view the PDF.');
     }
 }
 
