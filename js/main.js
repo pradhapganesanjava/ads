@@ -10,7 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
-import { getGoodNotesADSFiles } from './gDriveService.js';
+import { getGoodNotesADSFiles, fetchPdfFromDrive } from './gDriveService.js';
 import { renderPDF, closePdfViewer } from './pdfViewer.js';
 
 async function init() {
@@ -109,25 +109,41 @@ async function initDriveADSFiles() {
         handleError(error);
     }
 }
-// Replace the showIframe function with this
-function showPdfViewer({ fileId, title }) {
-    const pdfViewerContainer = document.getElementById('pdfViewerContainer');
-    const tableContainer = document.getElementById('tableContainer');
-    const pdfTitle = document.getElementById('pdfTitle');
+async function showPdfViewer({ fileId, title }) {
+    try {
+        updateState({ isLoading: true });
+        const pdfBlob = await fetchPdfFromDrive(fileId);
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-    if (pdfViewerContainer && pdfTitle) {
-        pdfTitle.textContent = title;
+        const pdfViewerContainer = document.getElementById('pdfViewerContainer');
+        const pdfTitle = document.getElementById('pdfTitle');
 
-        // const pdfUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-        const pdfUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+        if (pdfViewerContainer && pdfTitle) {
+            pdfTitle.textContent = title;
+            renderPDF(pdfUrl);
 
-        renderPDF(pdfUrl);
-
-        tableContainer.classList.add('d-none');
-        pdfViewerContainer.classList.remove('d-none');
-    } else {
-        console.error('Required elements for PDF viewer not found');
+            // Show the modal
+            $('#pdfViewerModal').modal('show');
+        } else {
+            console.error('Required elements for PDF viewer not found');
+            showFallback(fileId);
+        }
+    } catch (error) {
+        console.error('Error fetching PDF:', error);
         showFallback(fileId);
+    } finally {
+        updateState({ isLoading: false });
+    }
+}
+
+function showFallback(fileId) {
+    const fallbackContainer = document.getElementById('fallbackContainer');
+    const fallbackLink = document.getElementById('fallbackLink');
+
+    if (fallbackContainer && fallbackLink) {
+        fallbackContainer.style.display = 'block';
+        fallbackLink.href = `https://drive.google.com/file/d/${fileId}/view`;
+        $('#pdfViewerModal').modal('hide');
     }
 }
 

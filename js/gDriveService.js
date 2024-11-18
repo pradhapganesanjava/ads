@@ -57,6 +57,21 @@ export async function getGoodNotesADSFiles() {
     return [];
 }
 
+export async function fetchPdfFromDrive(fileId) {
+    try {
+        const response = await gapi.client.drive.files.get({
+            fileId: fileId,
+            alt: 'media'
+        });
+
+        const pdfBlob = new Blob([response.body], { type: 'application/pdf' });
+        return pdfBlob;
+    } catch (error) {
+        console.error('Error fetching PDF from Drive:', error);
+        throw error;
+    }
+}
+
 export async function listFilesByPath(folderPath) {
     try {
         // Get the folder ID
