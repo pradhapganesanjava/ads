@@ -108,12 +108,12 @@ async function initDriveADSFiles() {
         handleError(error);
     }
 }
-function showPdfViewer(fileId, title) {
+function showPdfViewer(paramObj) {
     const width = 1200;
     const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
-    const pdfViewerUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+    const pdfViewerUrl = `https://drive.google.com/file/d/${paramObj.fileId}/preview`;
     const newWindow = window.open(pdfViewerUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
 
     if (newWindow) {
