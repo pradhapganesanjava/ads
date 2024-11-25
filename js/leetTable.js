@@ -1,6 +1,6 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
-import { listDriveFileById } from './gDriveService.js';
+import { listDriveFileById, listAnkiLeetProbById } from './gDriveService.js';
 import { eventBus } from './eventBus.js';
 
 export function renderTable(filteredData) {
@@ -17,11 +17,21 @@ export function renderTable(filteredData) {
         return FILTER_HEADERS.map(header => {
             if (header === 'title') {
                 const driveFile = listDriveFileById(row.ID);
+                const ankiProb = listAnkiLeetProbById(row.ID);
+
+                // Create note icon if drive file exists
                 const noteIcon = driveFile ?
                     `<a href="#" class="note-icon" data-file-id="${driveFile.id}" data-title="${row.title}">
-                        <i class="fas fa-sticky-note"></i>
+                        <i class="far fa-file-alt"></i>
                     </a>` : '';
-                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}`;
+
+                // Create Anki icon if Anki problem exists
+                const ankiIcon = ankiProb ?
+                    `<a href="#" class="anki-icon" data-problem-id="${ankiProb.id}" data-title="${row.title}">
+                        <img src="../img/anki-icon.svg" alt="Anki Icon" style="width: 16px; height: 16px;">
+                    </a>` : '';
+
+                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}`;
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {
@@ -64,6 +74,13 @@ export function renderTable(filteredData) {
                 const fileId = $(this).data('file-id');
                 const title = $(this).data('title');
                 eventBus.publish('showPdfViewer', { fileId, title });
+            });
+
+            $('.anki-icon').on('click', function (e) {
+                e.preventDefault();
+                const problemId = $(this).data('problem-id');
+                const title = $(this).data('title');
+                eventBus.publish('showAnkiPopup', { problemId, title });
             });
         }
     });

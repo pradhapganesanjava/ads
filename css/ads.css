@@ -155,12 +155,10 @@ th {
 }
 
 .note-icon {
-    border: 2px solid yellow;
-    padding: 5px;
-    border-radius: 5px;
-    color: rgb(246, 138, 5);
+    color: rgb(246 5 5);
     margin-left: 10px;
     display: inline-block;
+    background-color: #ffff0061;
 }
 
 .note-icon i {

@@ -1,60 +1,65 @@
-// js gDriveService.js
+// js/gDriveService.js
 
 import { GoogleDriveAPI } from './gDriveApi.js';
-import { GDRIVE_GOODNOTES_ADS_PATH } from './const.js';
+import { GDRIVE_GOODNOTES_ADS_PATH, GDRIVE_ANKI_ADS_PATH } from './const.js';
 
 let globalDriveFiles = [];
+let ankiLeetProbs = [];
 
 export function setGlobalDriveFiles(files) {
     globalDriveFiles = files;
 }
 
+export function setAnkiLeetProbs(files) {
+    ankiLeetProbs = files;
+}
+
+export function listAnkiLeetProbById(problemId) {
+    return ankiLeetProbs.find(problem => problem.note_id === problemId) || null;
+}
+
 export function listDriveFileById(noteId) {
     return globalDriveFiles.find(file => file.note_id === noteId) || null;
 }
-export async function getGoodNotesADSFiles() {
+
+async function getProcessedFiles(folderPath) {
     try {
-        // List files in the folder
-        // const files = await GoogleDriveAPI.listFiles(GDRIVE_GOODNOTES_ADS_FID);
-        const files = await listFilesByPath(GDRIVE_GOODNOTES_ADS_PATH);
+        const files = await listFilesByPath(folderPath);
 
         if (!files) {
-            console.error('No files found in the folder:', GDRIVE_GOODNOTES_ADS_PATH);
+            console.error('No files found in the folder:', folderPath);
             return [];
         }
 
-        // Process the files
         const processedFiles = files
             .map(file => {
-                // Check if the file name starts with an integer
                 const match = file.name.match(/^(\d+)/);
                 if (match) {
-                    // Extract the prefix integer
                     const note_id = parseInt(match[1], 10);
-                    // Return a new object with the id and original file data
-                    return {
-                        note_id,
-                        ...file
-                    };
+                    return { note_id, ...file };
                 }
-                // If the file name doesn't start with an integer, return null
                 return null;
             })
-            .filter(file => file !== null); // Remove null entries
+            .filter(file => file !== null);
 
         console.log('Processed files:', processedFiles);
-
-        // set the global drive files
-        setGlobalDriveFiles(processedFiles);
-
-        // Return the processed files
         return processedFiles;
     } catch (error) {
-        console.error('Error getting nested folder files:', error);
-        // Handle the error appropriately
-        // throw error; // or return an error JSON response
+        console.error('Error getting processed files:', error);
+        return [];
     }
-    return [];
+}
+
+export async function getGoodNotesADSFiles() {
+    const processedFiles = await getProcessedFiles(GDRIVE_GOODNOTES_ADS_PATH);
+    setGlobalDriveFiles(processedFiles);
+    return processedFiles;
+}
+
+export async function getAnkiLeetProbs() {
+    const processedFiles = await getProcessedFiles(GDRIVE_ANKI_ADS_PATH);
+    setAnkiLeetProbs(processedFiles);
+    return processedFiles;
 }
 
 export async function fetchPdfFromDrive(fileId) {
@@ -74,14 +79,9 @@ export async function fetchPdfFromDrive(fileId) {
 
 export async function listFilesByPath(folderPath) {
     try {
-        // Get the folder ID
         const specificFolderId = await GoogleDriveAPI.getFolderIdByPath(folderPath);
-
-        // List files in the folder
         const files = await GoogleDriveAPI.listFiles(specificFolderId);
-
         console.log('Files in the nested folder:', files);
-        
         return files;
     } catch (error) {
         console.error('Error getting nested folder files:', error);

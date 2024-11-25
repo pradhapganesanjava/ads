@@ -10,7 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
-import { getGoodNotesADSFiles, fetchPdfFromDrive } from './gDriveService.js';
+import { getGoodNotesADSFiles, getAnkiLeetProbs, fetchPdfFromDrive } from './gDriveService.js';
 import { renderPDF, closePdfViewer } from './pdfViewer.js';
 
 async function init() {
@@ -58,7 +58,7 @@ function expandFilterSolsColumn() {
 
 function setupEventSubscriptions() {
     eventBus.subscribe('showPdfViewer', showPdfViewer);
-    // eventBus.subscribe('closePdfViewer', closePdfViewer);
+    eventBus.subscribe('showAnkiPopup', showAnkiPopup);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
 }
@@ -87,7 +87,8 @@ async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
         const { mainData, filterData, mainDataJson, filterDataJson } = await fetchSheetData();
-        await initDriveADSFiles(); // Load Drive files
+        await initDriveADSFiles();
+        await initAnkiLeetProbs();
         setGlobalData(mainDataJson);
         renderTable(mainDataJson);
         renderFilters(filterDataJson);
@@ -108,19 +109,45 @@ async function initDriveADSFiles() {
         handleError(error);
     }
 }
+
+async function initAnkiLeetProbs() {
+    try {
+        const problems = await getAnkiLeetProbs();
+        console.log('Anki Leet Problems:', problems);
+    } catch (error) {
+        handleError(error);
+    }
+}
+
 function showPdfViewer(paramObj) {
     const width = 1200;
     const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
-    const pdfViewerUrl = `https://drive.google.com/file/d/${paramObj.fileId}/preview`;
-    const newWindow = window.open(pdfViewerUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+    const gDriveUrl = `https://drive.google.com/file/d/${paramObj.fileId}/preview`;
+    const newWindow = window.open(gDriveUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
 
     if (newWindow) {
         newWindow.focus();
     } else {
         console.error('Unable to open new window. Pop-up blocker may be enabled.');
         alert('Please allow pop-ups for this site to view the PDF.');
+    }
+}
+
+function showAnkiPopup(paramObj) {
+    const width = 800;
+    const height = 600;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const gDriveUrl = `https://drive.google.com/file/d/${paramObj.problemId}/preview`;
+    const newWindow = window.open(gDriveUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+
+    if (newWindow) {
+        newWindow.focus();
+    } else {
+        console.error('Unable to open new window. Pop-up blocker may be enabled.');
+        alert('Please allow pop-ups for this site to view the Anki problem.');
     }
 }
 

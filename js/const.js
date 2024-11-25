@@ -9,4 +9,5 @@ export const FILTER_RANGE = 'filter';
 export const FILTER_HEADERS = ['ID', 'title', 'difficulty', 'frequency', 'tags', 'relation_tag'];
 
 export const GDRIVE_GOODNOTES_ADS_PATH = 'GoodNotes/ALG - DS/Leetcode_Probs';
+export const GDRIVE_ANKI_ADS_PATH = 'ANKI_ADS/Anki_Leet_Probs_Notes';
 export const GDRIVE_GOODNOTES_ADS_FID = '1XyRAfIuAopMpGIUmjlPhTpmGrHXFGB-8';
