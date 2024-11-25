@@ -28,7 +28,7 @@ export function renderTable(filteredData) {
                 // Create Anki icon if Anki problem exists
                 const ankiIcon = ankiProb ?
                     `<a href="#" class="anki-icon" data-problem-id="${ankiProb.id}" data-title="${row.title}">
-                        <img src="img/anki-icon.svg" alt="Anki Icon" style="width: 16px; height: 16px;">
+                        <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
                     </a>` : '';
 
                 return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}`;

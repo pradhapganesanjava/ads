@@ -153,14 +153,3 @@ th {
     color: #007bff;
     border-color: #007bff;
 }
-
-.note-icon {
-    color: rgb(246 5 5);
-    margin-left: 10px;
-    display: inline-block;
-    background-color: #ffff0061;
-}
-
-.note-icon i {
-    font-size: 1.2em;
-}
