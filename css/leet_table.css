@@ -18,15 +18,15 @@
     font-size: 1.2em;
 } */
 
-.title-column {
+.title-cell {
     display: flex;
     align-items: center;
-    gap: 10px; /* Spacing between elements */
+    gap: 10px;
 }
 
-.title-column a {
-    text-decoration: none; /* Remove underlines */
-    color: #007bff; /* Default link color */
+.title-cell a {
+    text-decoration: none;
+    color: #007bff;
 }
 
 .note-icon,

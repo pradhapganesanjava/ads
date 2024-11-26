@@ -18,23 +18,20 @@ export function renderTable(filteredData) {
             if (header === 'title') {
                 const driveFile = listDriveFileById(row.ID);
                 const ankiProb = listAnkiLeetProbById(row.ID);
-
-                // Create note icon if drive file exists
+            
+                const titleLink = `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>`;
+            
                 const noteIcon = driveFile ?
                     `<a href="#" class="note-icon" data-file-id="${driveFile.id}" data-title="${row.title}">
                         <i class="far fa-file-alt"></i>
                     </a>` : '';
-
-                // Create Anki icon if Anki problem exists
+            
                 const ankiIcon = ankiProb ?
                     `<a href="#" class="anki-icon" data-problem-id="${ankiProb.id}" data-title="${row.title}">
                         <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
                     </a>` : '';
-
-                // return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}`;
-                return `<td class="title-column">
-                            <a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}
-                        </td>`;
+            
+                return `<div>${titleLink}</div><div>${noteIcon}</div><div>${ankiIcon}</div>`;
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {
@@ -50,13 +47,18 @@ export function renderTable(filteredData) {
 
     $('#sheetDataTable').DataTable({
         data: tableData,
-        columns: FILTER_HEADERS.map(header => ({
+        columns: FILTER_HEADERS.map((header, index) => ({
             title: header,
             render: function (data, type, row) {
                 if (type === 'display' && header === 'title') {
                     return data;
                 }
                 return data;
+            },
+            createdCell: function (td, cellData, rowData, row, col) {
+                if (header === 'title') {
+                    $(td).addClass('title-cell');
+                }
             }
         })),
         pageLength: 25,
