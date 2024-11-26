@@ -31,7 +31,10 @@ export function renderTable(filteredData) {
                         <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
                     </a>` : '';
 
-                return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}`;
+                // return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}`;
+                return `<td class="title-column">
+                            <a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>&nbsp;&nbsp;${noteIcon}&nbsp;&nbsp;${ankiIcon}
+                        </td>`;
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {

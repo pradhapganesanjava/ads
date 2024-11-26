@@ -18,16 +18,17 @@
     font-size: 1.2em;
 } */
 
-td {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important; /* Spacing between elements */
+.title-column {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between elements */
 }
 
-td a {
-    text-decoration: none !important; /* Remove underlines */
-    color: #007bff !important; /* Default link color */
+.title-column a {
+    text-decoration: none; /* Remove underlines */
+    color: #007bff; /* Default link color */
 }
+
 .note-icon,
 .anki-icon {
     margin: 0; /* Reset margins to avoid extra spacing issues */
