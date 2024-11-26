@@ -1,4 +1,4 @@
-.anki-icon{
+/* .anki-icon{
     margin-left: 10px;
     display: inline-block;
 }
@@ -16,4 +16,30 @@
 
 .note-icon i {
     font-size: 1.2em;
+} */
+
+.note-icon,
+.anki-icon {
+    margin: 0; /* Reset margins to avoid extra spacing issues */
+    display: inline-flex; /* Ensure inline behavior while keeping alignment */
+    align-items: center; /* Center vertically */
+    justify-content: center;
+    background-color: #ffff0061; /* Background for note icon */
+    border-radius: 4px; /* Slight rounding for a modern look */
+    padding: 2px 4px; /* Add padding for consistent clickable area */
+}
+
+.note-icon i {
+    font-size: 1.2em; /* Adjust icon size */
+    color: rgb(246, 5, 5); /* Icon color for note */
+}
+
+.anki-icon {
+    margin-left: 0; /* Remove margin since `gap` handles spacing */
+}
+
+.anki-icon-img {
+    width: 20px; /* Adjust image size */
+    height: 20px;
+    display: inline-block; /* Ensure alignment with text */
 }

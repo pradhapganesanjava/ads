@@ -136,8 +136,8 @@ function showPdfViewer(paramObj) {
 }
 
 function showAnkiPopup(paramObj) {
-    const width = 800;
-    const height = 600;
+    const width = 1200;
+    const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const gDriveUrl = `https://drive.google.com/file/d/${paramObj.problemId}/preview`;
