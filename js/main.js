@@ -11,7 +11,6 @@ import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 import { getGoodNotesADSFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
-import { renderPDF, closePdfViewer } from './pdfViewer.js';
 
 async function init() {
     try {
@@ -145,22 +144,6 @@ function showPdfViewer(paramObj) {
     } else {
         console.error('Unable to open new window. Pop-up blocker may be enabled.');
         alert('Please allow pop-ups for this site to view the PDF.');
-    }
-}
-
-function showAnkiPopup(paramObj) {
-    const width = 1200;
-    const height = 800;
-    const left = (window.screen.width - width) / 2;
-    const top = (window.screen.height - height) / 2;
-    const gDriveUrl = `https://drive.google.com/file/d/${paramObj.problemId}/preview`;
-    const newWindow = window.open(gDriveUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
-
-    if (newWindow) {
-        newWindow.focus();
-    } else {
-        console.error('Unable to open new window. Pop-up blocker may be enabled.');
-        alert('Please allow pop-ups for this site to view the Anki problem.');
     }
 }
 

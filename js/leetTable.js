@@ -10,44 +10,88 @@ export function renderTable(filteredData) {
         return;
     }
 
-    const tableHeaders = FILTER_HEADERS.map(header => `<th>${header}</th>`).join('');
-    $('#sheetDataTable thead').html(`<tr>${tableHeaders}</tr>`);
+    const tableHeaders = createTableHeaders();
+    const tableData = createTableData(filteredData);
 
-    const tableData = filteredData.map(row => {
-        return FILTER_HEADERS.map(header => {
-            if (header === 'title') {
-                const driveFile = listDriveFileById(row.ID);
-                const ankiProb = listAnkiLeetProbById(row.ID);
-            
-                const titleLink = `<a href="${row.link}" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">${row.title}</a>`;
-            
-                const noteIcon = driveFile ?
-                    `<a href="#" class="note-icon" data-file-id="${driveFile.id}" data-title="${row.title}">
-                        <i class="far fa-file-alt"></i>
-                    </a>` : '';
-            
-                const ankiIcon = ankiProb ?
-                    `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.title}">
-                        <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
-                    </a>` : '';
-            
-                return `<div>${titleLink}</div><div>${noteIcon}</div><div>${ankiIcon}</div>`;
-            } else if (header === 'tags') {
-                return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
-            } else if (header === 'relation_tag') {
-                const tags = Array.isArray(row.relation_tag) ? row.relation_tag : [row.relation_tag];
-                return tags.map(tag => {
-                    const pattern = getAnkiLeetPatternByName(tag);
-                    if (pattern) {
-                        const backgroundColor = getColorForTag(tag);
-                        return `<a href="#" class="relation-tag" data-file-id="${pattern.id}" data-title="${tag}" style="background-color: ${backgroundColor};">${tag}</a>`;
-                    }
-                    return tag;
-                }).join(', ');
-            }
+    renderDataTable(tableHeaders, tableData);
+}
+
+function createTableHeaders() {
+    return FILTER_HEADERS.map(header => `<th>${header}</th>`).join('');
+}
+
+function createTableData(filteredData) {
+    return filteredData.map(row => 
+        FILTER_HEADERS.map(header => createCellContent(header, row))
+    );
+}
+
+function createCellContent(header, row) {
+    switch (header) {
+        case 'title':
+            return createTitleCell(row);
+        case 'tags':
+            return formatTags(row.tags);
+        case 'relation_tag':
+            return createRelationTags(row.relation_tag);
+        default:
             return row[header] !== undefined ? row[header] : '';
-        });
-    });
+    }
+}
+
+function createTitleCell(row) {
+    const titleLink = createTitleLink(row);
+    const noteIcon = createNoteIcon(row);
+    const ankiIcon = createAnkiIcon(row);
+    return `<div>${titleLink}</div><div>${noteIcon}</div><div>${ankiIcon}</div>`;
+}
+
+function createTitleLink(row) {
+    return `<a href="${row.link}" target="_blank" rel="noopener noreferrer" 
+        onclick="window.open(this.href, '_blank', 'width=1200,height=800'); return false;">
+        ${row.title}
+    </a>`;
+}
+
+function createNoteIcon(row) {
+    const driveFile = listDriveFileById(row.ID);
+    return driveFile ? 
+        `<a href="#" class="note-icon" data-file-id="${driveFile.id}" data-title="${row.title}">
+            <i class="far fa-file-alt"></i>
+        </a>` : '';
+}
+
+function createAnkiIcon(row) {
+    const ankiProb = listAnkiLeetProbById(row.ID);
+    return ankiProb ?
+        `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.title}">
+            <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
+        </a>` : '';
+}
+
+function formatTags(tags) {
+    return Array.isArray(tags) ? tags.join(', ') : tags;
+}
+
+function createRelationTags(relationTags) {
+    const tags = Array.isArray(relationTags) ? relationTags : [relationTags];
+    return tags.map(createRelationTag).join(', ');
+}
+
+function createRelationTag(tag) {
+    const pattern = getAnkiLeetPatternByName(tag);
+    if (pattern) {
+        const borderColor = getColorForTag(tag);
+        return `<a href="#" class="relation-tag" data-file-id="${pattern.id}" data-title="${tag}" 
+            style="border: 2px solid ${borderColor}; padding: 2px 5px; border-radius: 3px; margin: 2px; display: inline-block;">
+            ${tag}
+        </a>`;
+    }
+    return tag;
+}
+
+function renderDataTable(tableHeaders, tableData) {
+    $('#sheetDataTable thead').html(`<tr>${tableHeaders}</tr>`);
 
     if ($.fn.DataTable.isDataTable('#sheetDataTable')) {
         $('#sheetDataTable').DataTable().destroy();
@@ -55,20 +99,7 @@ export function renderTable(filteredData) {
 
     $('#sheetDataTable').DataTable({
         data: tableData,
-        columns: FILTER_HEADERS.map((header, index) => ({
-            title: header,
-            render: function (data, type, row) {
-                if (type === 'display' && header === 'title') {
-                    return data;
-                }
-                return data;
-            },
-            createdCell: function (td, cellData, rowData, row, col) {
-                if (header === 'title') {
-                    $(td).addClass('title-cell');
-                }
-            }
-        })),
+        columns: createDataTableColumns(),
         pageLength: 25,
         lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
         responsive: true,
@@ -78,41 +109,40 @@ export function renderTable(filteredData) {
         paging: true,
         autoWidth: false,
         dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        drawCallback: function () {
-            $('.note-icon').on('click', function (e) {
-                e.preventDefault();
-                const fileId = $(this).data('file-id');
-                const title = $(this).data('title');
-                eventBus.publish('showPdfViewer', { fileId, title });
-            });
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+        drawCallback: setupEventListeners
+    });
+}
 
-            $('.anki-icon').on('click', function (e) {
-                e.preventDefault();
-                const fileId = $(this).data('file-id');
-                const title = $(this).data('title');
-                eventBus.publish('showAnkiPopup', { fileId, title });
-            });
-
-            $('.relation-tag').on('click', function (e) {
-                e.preventDefault();
-                const fileId = $(this).data('file-id');
-                const title = $(this).data('title');
-                eventBus.publish('showRelationTagPopup', { fileId, title });
-            });
+function createDataTableColumns() {
+    return FILTER_HEADERS.map((header) => ({
+        title: header,
+        render: (data, type) => (type === 'display' && header === 'title') ? data : data,
+        createdCell: (td, cellData, rowData, row, col) => {
+            if (header === 'title') $(td).addClass('title-cell');
         }
+    }));
+}
+
+function setupEventListeners() {
+    $('.note-icon, .anki-icon, .relation-tag').off('click').on('click', function(e) {
+        e.preventDefault();
+        const fileId = $(this).data('file-id');
+        const title = $(this).data('title');
+        const eventType = $(this).attr('class').split('-')[0];
+        const eventMap = {
+            'note': 'showPdfViewer',
+            'anki': 'showAnkiPopup',
+            'relation': 'showRelationTagPopup'
+        };
+        eventBus.publish(eventMap[eventType], { fileId, title });
     });
 }
 
 function getColorForTag(tag) {
-    // Implement a function to generate a unique color for each tag
-    // This is a simple example using hash function
     let hash = 0;
     for (let i = 0; i < tag.length; i++) {
         hash = tag.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const color = `hsl(${hash % 360}, 70%, 80%)`;
-    return color;
+    return `hsl(${hash % 360}, 70%, 80%)`;
 }
