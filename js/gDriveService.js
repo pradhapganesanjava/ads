@@ -60,7 +60,8 @@ function processGoodNotesAndAnkiFiles(files) {
 
 function processAnkiLeetPatterns(files) {
     return files.reduce((acc, file) => {
-        acc[file.name] = file;
+        const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+        acc[nameWithoutExtension] = file;
         return acc;
     }, {});
 }
