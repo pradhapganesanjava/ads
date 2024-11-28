@@ -83,7 +83,7 @@ function createRelationTag(tag) {
     if (pattern) {
         const borderColor = getColorForTag(tag);
         return `<a href="#" class="relation-tag" data-file-id="${pattern.id}" data-title="${tag}" 
-            style="border: 2px solid ${borderColor}; border-radius: 3px; padding-left: 2px; display: inline-block;">
+            style="border: 2px solid ${borderColor}; border-radius: 3px; padding-left: 2px; display: inline-block; margin: 2px;">
             ${tag}
         </a>`;
     }
