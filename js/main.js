@@ -10,7 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
-import { getGoodNotesADSFiles, getAnkiLeetProbs, fetchPdfFromDrive } from './gDriveService.js';
+import { getGoodNotesADSFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
 import { renderPDF, closePdfViewer } from './pdfViewer.js';
 
 async function init() {
@@ -58,9 +58,10 @@ function expandFilterSolsColumn() {
 
 function setupEventSubscriptions() {
     eventBus.subscribe('showPdfViewer', showPdfViewer);
-    eventBus.subscribe('showAnkiPopup', showAnkiPopup);
+    eventBus.subscribe('showAnkiPopup', showPdfViewer);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
+    eventBus.subscribe('showRelationTagPopup', showPdfViewer);
 }
 
 async function handleAuthClick() {
@@ -86,9 +87,12 @@ function handleSignoutClick() {
 async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
-        const { mainData, filterData, mainDataJson, filterDataJson } = await fetchSheetData();
+        const {mainDataJson, filterDataJson } = await fetchSheetData();
+
         await initDriveADSFiles();
         await initAnkiLeetProbs();
+        await initAnkiLeetPatterns();
+
         setGlobalData(mainDataJson);
         renderTable(mainDataJson);
         renderFilters(filterDataJson);
@@ -114,6 +118,15 @@ async function initAnkiLeetProbs() {
     try {
         const problems = await getAnkiLeetProbs();
         console.log('Anki Leet Problems:', problems);
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+async function initAnkiLeetPatterns() {
+    try {
+        const patterns = await getAnkiLeetPatterns();
+        console.log('Anki Leet Patterns:', patterns);
     } catch (error) {
         handleError(error);
     }

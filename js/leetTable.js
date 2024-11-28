@@ -1,6 +1,6 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
-import { listDriveFileById, listAnkiLeetProbById } from './gDriveService.js';
+import { listDriveFileById, listAnkiLeetProbById, getAnkiLeetPatternByName } from './gDriveService.js';
 import { eventBus } from './eventBus.js';
 
 export function renderTable(filteredData) {
@@ -27,7 +27,7 @@ export function renderTable(filteredData) {
                     </a>` : '';
             
                 const ankiIcon = ankiProb ?
-                    `<a href="#" class="anki-icon" data-problem-id="${ankiProb.id}" data-title="${row.title}">
+                    `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.title}">
                         <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
                     </a>` : '';
             
@@ -35,7 +35,15 @@ export function renderTable(filteredData) {
             } else if (header === 'tags') {
                 return Array.isArray(row.tags) ? row.tags.join(', ') : row.tags;
             } else if (header === 'relation_tag') {
-                return Array.isArray(row.relation_tag) ? row.relation_tag.join(', ') : row.relation_tag;
+                const tags = Array.isArray(row.relation_tag) ? row.relation_tag : [row.relation_tag];
+                return tags.map(tag => {
+                    const pattern = getAnkiLeetPatternByName(tag);
+                    if (pattern) {
+                        const backgroundColor = getColorForTag(tag);
+                        return `<a href="#" class="relation-tag" data-file-id="${pattern.id}" data-title="${tag}" style="background-color: ${backgroundColor};">${tag}</a>`;
+                    }
+                    return tag;
+                }).join(', ');
             }
             return row[header] !== undefined ? row[header] : '';
         });
@@ -83,10 +91,28 @@ export function renderTable(filteredData) {
 
             $('.anki-icon').on('click', function (e) {
                 e.preventDefault();
-                const problemId = $(this).data('problem-id');
+                const fileId = $(this).data('file-id');
                 const title = $(this).data('title');
-                eventBus.publish('showAnkiPopup', { problemId, title });
+                eventBus.publish('showAnkiPopup', { fileId, title });
+            });
+
+            $('.relation-tag').on('click', function (e) {
+                e.preventDefault();
+                const fileId = $(this).data('file-id');
+                const title = $(this).data('title');
+                eventBus.publish('showRelationTagPopup', { fileId, title });
             });
         }
     });
+}
+
+function getColorForTag(tag) {
+    // Implement a function to generate a unique color for each tag
+    // This is a simple example using hash function
+    let hash = 0;
+    for (let i = 0; i < tag.length; i++) {
+        hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = `hsl(${hash % 360}, 70%, 80%)`;
+    return color;
 }

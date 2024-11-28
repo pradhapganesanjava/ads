@@ -45,8 +45,6 @@ export async function fetchSheetData() {
         });
 
         return {
-            mainData,
-            filterData: filterData || [],
             mainDataJson,
             filterDataJson
         };
