@@ -83,7 +83,7 @@ function createRelationTag(tag) {
     if (pattern) {
         const borderColor = getColorForTag(tag);
         return `<a href="#" class="relation-tag" data-file-id="${pattern.id}" data-title="${tag}" 
-            style="border: 2px solid ${borderColor}; padding: 2px 5px; border-radius: 3px; margin: 2px; display: inline-block;">
+            style="border: 6px solid ${borderColor}; border-radius: 3px;">
             ${tag}
         </a>`;
     }
@@ -139,10 +139,20 @@ function setupEventListeners() {
     });
 }
 
+const colorCache = new Map();
+const goldenRatio = 0.618033988749895;
+let hue = Math.random();
+
 function getColorForTag(tag) {
-    let hash = 0;
-    for (let i = 0; i < tag.length; i++) {
-        hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+    if (colorCache.has(tag)) {
+        return colorCache.get(tag);
     }
-    return `hsl(${hash % 360}, 70%, 80%)`;
+
+    hue += goldenRatio;
+    hue %= 1;
+
+    const hslColor = `hsl(${Math.floor(hue * 360)}, 100%, 50%)`;
+    colorCache.set(tag, hslColor);
+
+    return hslColor;
 }
