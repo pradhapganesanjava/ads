@@ -1,10 +1,13 @@
 // js/sheetOperations.js
-import { SPREADSHEET_ID, RANGE, FILTER_RANGE } from './const.js';
+import { GDRIVE_FB_PROBS, RANGE, FILTER_RANGE } from './const.js';
+import { getFileIdFromPath } from './gDriveService.js';
 
 export async function fetchSheetData() {
     try {
+        sheet_id = getFileIdFromPath(GDRIVE_FB_PROBS);
+        console.log('Sheet ID:', sheet_id);
         const response = await gapi.client.sheets.spreadsheets.values.batchGet({
-            spreadsheetId: SPREADSHEET_ID,
+            spreadsheetId: sheet_id,
             ranges: [RANGE, FILTER_RANGE],
             valueRenderOption: 'UNFORMATTED_VALUE',
             dateTimeRenderOption: 'FORMATTED_STRING'

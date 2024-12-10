@@ -109,3 +109,25 @@ export async function listFilesByPath(folderPath) {
     }
     return [];
 }
+
+export async function getFileIdFromPath(filePath) {
+    try {
+        const response = await gapi.client.drive.files.list({
+            q: `name = '${filePath.split('/').pop()}' and mimeType = 'application/vnd.google-apps.spreadsheet'`,
+            fields: 'files(id, name, parents)',
+            spaces: 'drive'
+        });
+
+        const files = response.result.files;
+        if (files && files.length > 0) {
+            // You might want to add more logic here to ensure you're getting the correct file
+            // if there are multiple files with the same name
+            return files[0].id;
+        } else {
+            throw new Error('No files found.');
+        }
+    } catch (err) {
+        console.error('Error getting file ID:', err);
+        throw err;
+    }
+}
