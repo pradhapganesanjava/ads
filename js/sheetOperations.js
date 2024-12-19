@@ -81,16 +81,10 @@ export function getAnkiNidData(data) {
     return data.ankiNidDataJson;
 }
 
-export async function getAnkiwebNoteById(id) {
+export function getAnkiwebNoteById(id) {
     if (!cachedAnkiNidDataJson) {
-        try {
-            const data = await fetchSheetData();
-            cachedAnkiNidDataJson = data.ankiNidDataJson;
-        } catch (error) {
-            console.error('Error fetching Anki NID data:', error);
-            return null;
-        }
+        console.warn('AnkiNidDataJson is not cached. This should not happen in normal operation.');
+        return null;
     }
-
     return cachedAnkiNidDataJson.find(record => record.id === id) || null;
 }

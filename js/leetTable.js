@@ -84,12 +84,41 @@ function formatTags(tags) {
     return Array.isArray(tags) ? tags.join(', ') : tags;
 }
 
+function formatTags(tags) {
+    if (!Array.isArray(tags)) {
+        tags = [tags];
+    }
+    return tags.map(tag => {
+        const ankiwebNote = getAnkiwebNoteById(tag);
+        if (ankiwebNote) {
+            const borderColor = getColorForTag(tag);
+            return `<a href="#" class="tag-link" data-file-id="${ankiwebNote.nid}" data-title="${tag}" 
+                style="border: 2px solid ${borderColor}; border-radius: 3px; padding-left: 2px; display: inline-block; margin: 2px;">
+                ${tag}
+            </a>`;
+        }
+        return tag;
+    }).join(', ');
+}
+
 function createRelationTags(relationTags) {
     const tags = Array.isArray(relationTags) ? relationTags : [relationTags];
     return tags.map(createRelationTag).join(', ');
 }
 
 function createRelationTag(tag) {
+    const ankiwebNote = getAnkiwebNoteById(tag);
+    if (ankiwebNote) {
+        const borderColor = getColorForTag(tag);
+        return `<a href="#" class="relation-tag" data-file-id="${ankiwebNote.nid}" data-title="${tag}" 
+            style="border: 2px solid ${borderColor}; border-radius: 3px; padding-left: 2px; display: inline-block; margin: 2px;">
+            ${tag}
+        </a>`;
+    }
+    return tag;
+}
+
+function createRelationTagFromPDF(tag) {
     const pattern = getAnkiLeetPatternByName(tag);
     if (pattern) {
         const borderColor = getColorForTag(tag);
@@ -144,7 +173,8 @@ function setupEventListeners() {
         const eventMap = {
             'note': 'showPdfViewer',
             'anki': 'showAnkiPopup',
-            'relation': 'showRelationTagPopup'
+            'relation': 'showRelationTagPopup',
+            'tag': 'showTagPopup'
         };
         eventBus.publish(eventMap[eventType], { fileId, title });
     });

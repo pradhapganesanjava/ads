@@ -57,8 +57,11 @@ function expandFilterSolsColumn() {
 
 function setupEventSubscriptions() {
     eventBus.subscribe('showPdfViewer', showPdfViewer);
+
     eventBus.subscribe('showAnkiPopup', showAnkiWebPopup);
     eventBus.subscribe('showRelationTagPopup', showAnkiWebPopup);
+    eventBus.subscribe('showTagPopup', showAnkiWebPopup);
+    
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
 }
