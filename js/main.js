@@ -12,6 +12,8 @@ import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 import { getGoodNotesADSFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
 
+let ankiNidData = [];
+
 async function init() {
     try {
         await initializeApp(CONFIG);
@@ -57,10 +59,10 @@ function expandFilterSolsColumn() {
 
 function setupEventSubscriptions() {
     eventBus.subscribe('showPdfViewer', showPdfViewer);
-    eventBus.subscribe('showAnkiPopup', showPdfViewer);
+    eventBus.subscribe('showAnkiPopup', showAnkiWebPopup);
+    eventBus.subscribe('showRelationTagPopup', showAnkiWebPopup);
     eventBus.subscribe('showTable', showTable);
     eventBus.subscribe('error', handleViewError);
-    eventBus.subscribe('showRelationTagPopup', showPdfViewer);
 }
 
 async function handleAuthClick() {
@@ -86,7 +88,9 @@ function handleSignoutClick() {
 async function loadAndRenderData() {
     try {
         updateState({ isLoading: true });
-        const {mainDataJson, filterDataJson } = await fetchSheetData();
+        const { mainDataJson, filterDataJson, ankiNidDataJson } = await fetchSheetData();
+
+        ankiNidData = ankiNidDataJson;
 
         await initDriveADSFiles();
         await initAnkiLeetProbs();
@@ -128,6 +132,32 @@ async function initAnkiLeetPatterns() {
         console.log('Anki Leet Patterns:', patterns);
     } catch (error) {
         handleError(error);
+    }
+}
+
+function showAnkiWebPopup(paramObj) {
+    console.log('showAnkiWebPopup:', paramObj);
+    const { title } = paramObj;
+    const ankiItem = ankiNidData.find(item => item.id === title);
+    
+    if (ankiItem && ankiItem.nid) {
+        const ankiWebUrl = `https://ankiweb.net/edit/${ankiItem.nid}`;
+        const width = 1200;
+        const height = 800;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+        
+        const newWindow = window.open(ankiWebUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+
+        if (newWindow) {
+            newWindow.focus();
+        } else {
+            console.error('Unable to open new window. Pop-up blocker may be enabled.');
+            alert('Please allow pop-ups for this site to view the AnkiWeb page.');
+        }
+    } else {
+        console.error(`No matching Anki NID found for title: ${title}`);
+        alert(`No matching Anki card found for: ${title}`);
     }
 }
 

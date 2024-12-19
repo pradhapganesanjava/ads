@@ -2,8 +2,9 @@
 
 export const GDRIVE_FB_PROBS = 'PG-ADS/fb_all_prob';
 export const GDRIVE_ADS_PATTERN = 'PG-ADS/ads_patterns';
-export const RANGE = 'fb_all_prob'; 
-export const FILTER_RANGE = 'filter';
+export const FB_ALL_SHEET = 'fb_all_prob'; 
+export const FILTER_SHEET = 'filter';
+export const ANKI_NID_SHEET = 'anki_nid_map';
 export const SPREADSHEET_ID = '1MgmXRQw-hdMkJDDuE5XBswAz9TlO0NEPmcdVgyGDY0c'
 export const CLIENT_ID = '1001531064954-1207m61i9hkrausk96fe812jvqvjv4ef.apps.googleusercontent.com';
 

@@ -64,7 +64,7 @@ function createNoteIcon(row) {
 function createAnkiIcon(row) {
     const ankiProb = listAnkiLeetProbById(row.ID);
     return ankiProb ?
-        `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.title}">
+        `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.ID}">
             <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
         </a>` : '';
 }
