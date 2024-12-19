@@ -137,7 +137,7 @@ async function initAnkiLeetPatterns() {
 function showAnkiWebPopup(paramObj) {
     console.log('showAnkiWebPopup:', paramObj);
     
-    if (fileId && fileId.fileId) {
+    if (paramObj && paramObj.fileId) {
         const ankiWebUrl = `https://ankiweb.net/edit/${paramObj.fileId}`;
         const width = 1200;
         const height = 800;
