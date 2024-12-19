@@ -80,7 +80,7 @@ function createAnkiIconPdf(row) {
         </a>` : '';
 }
 
-function formatTags(tags) {
+function formatTagsX(tags) {
     return Array.isArray(tags) ? tags.join(', ') : tags;
 }
 
