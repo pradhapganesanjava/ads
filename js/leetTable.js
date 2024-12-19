@@ -165,7 +165,7 @@ function createDataTableColumns() {
 }
 
 function setupEventListeners() {
-    $('.note-icon, .anki-icon, .relation-tag').off('click').on('click', function(e) {
+    $('.note-icon, .anki-icon, .relation-tag, .tag-link').off('click').on('click', function(e) {
         e.preventDefault();
         const fileId = $(this).data('file-id');
         const title = $(this).data('title');
