@@ -63,7 +63,7 @@ function createNoteIcon(row) {
 }
 
 function createAnkiIcon(row) {
-    const ankiwebNote = getAnkiwebNoteById(ankiNidDataJson, row.ID);
+    const ankiwebNote = getAnkiwebNoteById(row.ID);
     if (ankiwebNote) {
         return `<a href="#" class="anki-icon" data-file-id="${ankiwebNote.nid}" data-title="${row.ID}">
             <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">

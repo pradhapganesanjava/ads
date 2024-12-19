@@ -2,6 +2,8 @@
 import { GDRIVE_FB_PROBS, FB_ALL_SHEET, FILTER_SHEET, ANKI_NID_SHEET } from './const.js';
 import { getFileIdFromPath } from './gDriveService.js';
 
+let cachedAnkiNidDataJson = null;
+
 export async function fetchSheetData() {
     try {
         const sheet_id = await getFileIdFromPath(GDRIVE_FB_PROBS);
@@ -58,6 +60,8 @@ export async function fetchSheetData() {
             }, {});
         });
 
+        cachedAnkiNidDataJson = ankiNidDataJson;
+
         return {
             mainDataJson,
             filterDataJson,
@@ -77,6 +81,16 @@ export function getAnkiNidData(data) {
     return data.ankiNidDataJson;
 }
 
-export function getAnkiwebNoteById(ankiNidDataJson, id) {
-    return ankiNidDataJson.find(record => record.id === id) || null;
+export async function getAnkiwebNoteById(id) {
+    if (!cachedAnkiNidDataJson) {
+        try {
+            const data = await fetchSheetData();
+            cachedAnkiNidDataJson = data.ankiNidDataJson;
+        } catch (error) {
+            console.error('Error fetching Anki NID data:', error);
+            return null;
+        }
+    }
+
+    return cachedAnkiNidDataJson.find(record => record.id === id) || null;
 }
