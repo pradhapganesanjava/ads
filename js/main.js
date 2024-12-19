@@ -12,8 +12,6 @@ import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
 import { getGoodNotesADSFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
 
-let ankiNidData = [];
-
 async function init() {
     try {
         await initializeApp(CONFIG);
@@ -90,8 +88,6 @@ async function loadAndRenderData() {
         updateState({ isLoading: true });
         const { mainDataJson, filterDataJson, ankiNidDataJson } = await fetchSheetData();
 
-        ankiNidData = ankiNidDataJson;
-
         await initDriveADSFiles();
         await initAnkiLeetProbs();
         await initAnkiLeetPatterns();
@@ -137,11 +133,9 @@ async function initAnkiLeetPatterns() {
 
 function showAnkiWebPopup(paramObj) {
     console.log('showAnkiWebPopup:', paramObj);
-    const { title } = paramObj;
-    const ankiItem = ankiNidData.find(item => item.id === title);
     
     if (ankiItem && ankiItem.nid) {
-        const ankiWebUrl = `https://ankiweb.net/edit/${ankiItem.nid}`;
+        const ankiWebUrl = `https://ankiweb.net/edit/${paramObj.fileId}`;
         const width = 1200;
         const height = 800;
         const left = (window.screen.width - width) / 2;

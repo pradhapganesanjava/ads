@@ -76,3 +76,7 @@ export function getFilterData(data) {
 export function getAnkiNidData(data) {
     return data.ankiNidDataJson;
 }
+
+export function getAnkiwebNoteById(ankiNidDataJson, id) {
+    return ankiNidDataJson.find(record => record.id === id) || null;
+}

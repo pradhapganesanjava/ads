@@ -1,5 +1,6 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
+import { getAnkiwebNoteById } from './sheetOperations.js';
 import { listDriveFileById, listAnkiLeetProbById, getAnkiLeetPatternByName } from './gDriveService.js';
 import { eventBus } from './eventBus.js';
 
@@ -62,7 +63,17 @@ function createNoteIcon(row) {
 }
 
 function createAnkiIcon(row) {
-    const ankiProb = listAnkiLeetProbById(row.ID);
+    const ankiwebNote = getAnkiwebNoteById(ankiNidDataJson, row.ID);
+    if (ankiwebNote) {
+        return `<a href="#" class="anki-icon" data-file-id="${ankiwebNote.nid}" data-title="${row.ID}">
+            <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
+        </a>`;
+    }
+    return '';
+}
+
+function createAnkiIconPdf(row) {
+    const ankiProb = listAnkiLeetProbById(row.ID); //pdf exported; dont remove it.
     return ankiProb ?
         `<a href="#" class="anki-icon" data-file-id="${ankiProb.id}" data-title="${row.ID}">
             <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
