@@ -10,7 +10,7 @@ import { renderTable } from './leetTable.js';
 import { renderFilters, setGlobalData } from './filterUi.js';
 import { renderFilterSols, setupFilterSolsToggle } from './filterSols.js';
 import { eventBus } from './eventBus.js';
-import { getGoodNotesADSFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
+import { getGoodNotesADSFiles, getGoodNotesADSTagsFiles, getAnkiLeetProbs, getAnkiLeetPatterns } from './gDriveService.js';
 
 async function init() {
     try {
@@ -110,11 +110,16 @@ async function loadAndRenderData() {
 async function initDriveADSFiles() {
     try {
         const files = await getGoodNotesADSFiles();
-        console.log('Files in Drive:', files);
+        const tagFiles = await getGoodNotesADSTagsFiles();
+        
+        console.log(`GoodNotes ADS Files cnt: ${files?.length ?? 0}`);
+        console.log(`GoodNotes ADS Tag Files: ${tagFiles?.length ?? 0}`);
+
     } catch (error) {
         handleError(error);
     }
 }
+
 
 async function initAnkiLeetProbs() {
     try {
