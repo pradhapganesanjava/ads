@@ -1,7 +1,7 @@
 // js/leetTable.js
 import { FILTER_HEADERS } from './const.js';
 import { getAnkiwebNoteById } from './sheetOperations.js';
-import { listDriveFileById, listAnkiLeetProbById, getAnkiLeetPatternByName } from './gDriveService.js';
+import { getGoodNotesADSTagsFileByName, listDriveFileById, listAnkiLeetProbById, getAnkiLeetPatternByName } from './gDriveService.js';
 import { eventBus } from './eventBus.js';
 
 export function renderTable(filteredData) {
@@ -80,11 +80,11 @@ function createAnkiIconPdf(row) {
         </a>` : '';
 }
 
-function formatTagsX(tags) {
+function formatTagsXX(tags) {
     return Array.isArray(tags) ? tags.join(', ') : tags;
 }
 
-function formatTags(tags) {
+function formatTagsX(tags) {
     if (!Array.isArray(tags)) {
         tags = [tags];
     }
@@ -100,13 +100,45 @@ function formatTags(tags) {
         return tag;
     }).join(', ');
 }
+function formatTags(tags) {
+    if (!Array.isArray(tags)) {
+        tags = [tags];
+    }
+    return tags.map(tag => {
+        const ankiwebNote = getAnkiwebNoteById(tag);
+        const goodNotesFile = getGoodNotesADSTagsFileByName(tag);
+        
+        if (!ankiwebNote && !goodNotesFile) {
+            return tag;
+        }
+        
+        const borderColor = getColorForTag(tag);
+        let icons = '';
+        
+        if (ankiwebNote) {
+            icons += `<a href="#" class="anki-icon" data-file-id="${ankiwebNote.nid}">
+                <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
+            </a>`;
+        }
+        
+        if (goodNotesFile) {
+            icons += `<a href="#" class="note-icon" data-file-id="${goodNotesFile.id}">
+                <i class="far fa-file-alt"></i>
+            </a>`;
+        }
+        
+        return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 3px; padding: 2px; display: inline-block; margin: 2px;">
+            ${tag} ${icons}
+        </span>`;
+    }).join(' ');
+}
 
 function createRelationTags(relationTags) {
     const tags = Array.isArray(relationTags) ? relationTags : [relationTags];
     return tags.map(createRelationTag).join(', ');
 }
 
-function createRelationTag(tag) {
+function createRelationTagX(tag) {
     const ankiwebNote = getAnkiwebNoteById(tag);
     if (ankiwebNote) {
         const borderColor = getColorForTag(tag);
@@ -116,6 +148,34 @@ function createRelationTag(tag) {
         </a>`;
     }
     return tag;
+}
+
+function createRelationTag(tag) {
+    const ankiwebNote = getAnkiwebNoteById(tag);
+    const goodNotesFile = getGoodNotesADSTagsFileByName(tag);
+    
+    if (!ankiwebNote && !goodNotesFile) {
+        return tag;
+    }
+    
+    const borderColor = getColorForTag(tag);
+    let icons = '';
+    
+    if (ankiwebNote) {
+        icons += `<a href="#" class="anki-icon" data-file-id="${ankiwebNote.nid}">
+            <img src="img/anki-icon.svg" alt="Anki Icon" class="anki-icon-img">
+        </a>`;
+    }
+    
+    if (goodNotesFile) {
+        icons += `<a href="#" class="note-icon" data-file-id="${goodNotesFile.id}">
+            <i class="far fa-file-alt"></i>
+        </a>`;
+    }
+    
+    return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 3px; padding: 2px; display: inline-block; margin: 2px;">
+        ${tag} ${icons}
+    </span>`;
 }
 
 function createRelationTagFromPDF(tag) {
@@ -164,7 +224,7 @@ function createDataTableColumns() {
     }));
 }
 
-function setupEventListeners() {
+function setupEventListenersX() {
     $('.note-icon, .anki-icon, .relation-tag, .tag-link').off('click').on('click', function(e) {
         e.preventDefault();
         const fileId = $(this).data('file-id');
@@ -177,6 +237,15 @@ function setupEventListeners() {
             'tag': 'showTagPopup'
         };
         eventBus.publish(eventMap[eventType], { fileId, title });
+    });
+}
+function setupEventListeners() {
+    $('.note-icon, .anki-icon').off('click').on('click', function(e) {
+        e.preventDefault();
+        const fileId = $(this).data('file-id');
+        const title = $(this).closest('.tag-container').text().trim();
+        const eventType = $(this).hasClass('note-icon') ? 'showPdfViewer' : 'showAnkiPopup';
+        eventBus.publish(eventType, { fileId, title });
     });
 }
 

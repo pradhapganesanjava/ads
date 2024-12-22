@@ -1,11 +1,18 @@
 // js/gDriveService.js
 
 import { GoogleDriveAPI } from './gDriveApi.js';
-import { GDRIVE_GOODNOTES_ADS_PATH, GDRIVE_ANKI_ADS_PATH, GDRIVE_ANKI_PATTERN_PATH } from './const.js';
+import { GDRIVE_GOODNOTES_ADS_PATH, GDRIVE_GOODNOTES_ADS_TAGS_PATH, GDRIVE_ANKI_ADS_PATH, GDRIVE_ANKI_PATTERN_PATH } from './const.js';
 
 let globalDriveFiles = [];
+let goodNotesADSTagsFiles = [];
 let ankiLeetProbs = [];
 let ankiLeetPatterns = {};
+
+export function setGoodNotesADSTagsFiles(files) {
+    const fileCount = Array.isArray(files) ? files.length : 0;
+    console.log(`setGoodNotesADSTagsFiles: ${fileCount} files`);
+    goodNotesADSTagsFiles = files || [];
+}
 
 export function setGlobalDriveFiles(files) {
     globalDriveFiles = files;
@@ -29,6 +36,10 @@ export function listDriveFileById(noteId) {
 
 export function getAnkiLeetPatternByName(patternName) {
     return ankiLeetPatterns[patternName] || null;
+}
+
+export function getGoodNotesADSTagsFileByName(patternName) {
+    return goodNotesADSTagsFiles[patternName] || null;
 }
 
 async function getProcessedFiles(folderPath, processFunction) {
@@ -64,6 +75,22 @@ function processAnkiLeetPatterns(files) {
         acc[nameWithoutExtension] = file;
         return acc;
     }, {});
+}
+
+function parseGoodNotesADSTagsFiles(files) {
+    return files.reduce((acc, file) => {
+        const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+        acc[nameWithoutExtension] = file;
+        return acc;
+    }, {});
+}
+
+export async function getGoodNotesADSTagsFiles() {
+    const processedFiles = await getProcessedFiles(GDRIVE_GOODNOTES_ADS_TAGS_PATH, parseGoodNotesADSTagsFiles);
+    console.log('getGoodNotesADSTagsFiles got processedFiles')
+    setGoodNotesADSTagsFiles(processedFiles);
+    console.log('getGoodNotesADSTagsFiles return processedFiles')
+    return processedFiles;
 }
 
 export async function getGoodNotesADSFiles() {
