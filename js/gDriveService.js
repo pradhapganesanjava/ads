@@ -39,8 +39,24 @@ export function getAnkiLeetPatternByName(patternName) {
 }
 
 export function getGoodNotesADSTagsFileByName(patternName) {
-    return goodNotesADSTagsFiles[patternName] || null;
+    if (!patternName || typeof patternName !== 'string') {
+        return null;
+    }
+
+    if (goodNotesADSTagsFiles[patternName]) {
+        return goodNotesADSTagsFiles[patternName];
+    }
+
+    const lowerPatternName = patternName.toLowerCase();
+    for (const key in goodNotesADSTagsFiles) {
+        if (key.toLowerCase() === lowerPatternName) {
+            return goodNotesADSTagsFiles[key];
+        }
+    }
+
+    return null;
 }
+
 
 async function getProcessedFiles(folderPath, processFunction) {
     try {
@@ -129,7 +145,7 @@ export async function listFilesByPath(folderPath) {
     try {
         const specificFolderId = await GoogleDriveAPI.getFolderIdByPath(folderPath);
         const files = await GoogleDriveAPI.listFiles(specificFolderId);
-        console.log('Files in the nested folder:', files);
+        // console.log('Files in the nested folder:', files);
         return files;
     } catch (error) {
         console.error('Error getting nested folder files:', error);

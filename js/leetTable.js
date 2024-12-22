@@ -127,8 +127,11 @@ function formatTags(tags) {
             </a>`;
         }
         
-        return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 3px; padding: 2px; display: inline-block; margin: 2px;">
-            ${tag} ${icons}
+        // return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 3px; padding: 2px; display: inline-block; margin: 2px;">
+        //     ${tag} ${icons}
+        // </span>`;
+        return `<span class="tag-container" style="border: 2px solid ${borderColor};">
+            <span class="tag-text">${tag}</span>${icons}
         </span>`;
     }).join(' ');
 }
@@ -173,8 +176,11 @@ function createRelationTag(tag) {
         </a>`;
     }
     
-    return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 3px; padding: 2px; display: inline-block; margin: 2px;">
-        ${tag} ${icons}
+    // return `<span class="tag-container" style="border: 2px solid ${borderColor}; border-radius: 2px; padding: 2px; display: inline-block; margin: 2px;">
+    //     ${tag} ${icons}
+    // </span>`;
+    return `<span class="tag-container" style="border: 2px solid ${borderColor};">
+        <span class="tag-text">${tag}</span>${icons}
     </span>`;
 }
 

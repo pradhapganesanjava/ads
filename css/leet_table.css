@@ -9,15 +9,38 @@
     color: #007bff;
 }
 
+/* .note-icon,
+.anki-icon {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffff0061;
+    border-radius: 4px;
+    padding: 2px 4px;
+} */
+
+.tag-container {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin: 2px;
+    background-color: #f8f9fa;
+}
+
+.tag-text {
+    margin-right: 4px;
+}
+
 .note-icon,
 .anki-icon {
-    margin: 0; /* Reset margins to avoid extra spacing issues */
-    display: inline-flex; /* Ensure inline behavior while keeping alignment */
-    align-items: center; /* Center vertically */
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    background-color: #ffff0061; /* Background for note icon */
-    border-radius: 4px; /* Slight rounding for a modern look */
-    padding: 2px 4px; /* Add padding for consistent clickable area */
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
 }
 
 .note-icon i {
