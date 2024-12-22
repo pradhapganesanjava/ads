@@ -92,8 +92,8 @@ async function loadAndRenderData() {
         const { mainDataJson, filterDataJson, ankiNidDataJson } = await fetchSheetData();
 
         await initDriveADSFiles();
-        await initAnkiLeetProbs();
-        await initAnkiLeetPatterns();
+        // await initAnkiLeetProbs();
+        // await initAnkiLeetPatterns();
 
         setGlobalData(mainDataJson);
         renderTable(mainDataJson);
@@ -110,13 +110,16 @@ async function loadAndRenderData() {
 async function initDriveADSFiles() {
     try {
         const files = await getGoodNotesADSFiles();
-        const tagFiles = await getGoodNotesADSTagsFiles();
-        
         console.log(`GoodNotes ADS Files cnt: ${files?.length ?? 0}`);
-        console.log(`GoodNotes ADS Tag Files: ${tagFiles?.length ?? 0}`);
-
     } catch (error) {
-        handleError(error);
+        handleError(error, 'Error fetching GoodNotes ADS Files');
+    }
+
+    try {
+        const tagFiles = await getGoodNotesADSTagsFiles();
+        console.log(`GoodNotes ADS Tag Files: ${tagFiles?.length ?? 0}`);
+    } catch (error) {
+        handleError(error, 'Error fetching GoodNotes ADS Tag Files');
     }
 }
 
